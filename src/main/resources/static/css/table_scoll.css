@@ -1,0 +1,80 @@
+@charset "utf-8";
+body{
+    overflow-x:hidden;
+}
+/*表格左侧固定，右侧可滑动*/
+.tab_wrap{
+    position: relative;
+}
+.tab_scroll_wrap{
+    overflow-x:auto;
+}
+.tab_scroll_wrap table th,.tab_scroll_wrap table td{
+    white-space: nowrap;
+    word-break: keep-all;
+}
+td.td_dot{
+    width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow : ellipsis;
+}
+td div.td_dot{
+    width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow : ellipsis;
+}
+/*右侧固定部分*/
+.tdRight_fixed{
+    position: absolute;
+    right: 1px;
+    z-index: 99;
+    background: #fff;
+    top: 1px;
+    border-left: 1px solid #ddd;
+    box-shadow: 1px 1px 4px #ddd, 1px 1px 3px #ddd, 1px 1px 3px #ddd, 1px 1px 3px #ddd;
+}
+.tdRight_fixed .th_fixed{
+    background: #f2f2f2;
+    background: -moz-linear-gradient(top,#f8f8f8 0,#ececec 100%)!important;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#f8f8f8),color-stop(100%,#ececec))!important;
+    background: -webkit-linear-gradient(top,#f8f8f8 0,#ececec 100%)!important;
+    background: -o-linear-gradient(top,#f8f8f8 0,#ececec 100%)!important;
+    background: -ms-linear-gradient(top,#f8f8f8 0,#ececec 100%)!important;
+    background: linear-gradient(to bottom,#f8f8f8 0,#ececec 100%)!important;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8',endColorstr='#ECECEC',GradientType=0)!important;
+    color: #707070;
+    font-weight: bold;
+}
+.tdRight_fixed .tdfixedR{
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+}
+.tdRight_fixed .tdfixedR:hover{
+    background: #f1f1f1;
+}
+.tdRight_fixed .tdfixedR:nth-child(2n+1){
+    background: #fff;
+}
+.tdRight_fixed .tdfixedR:nth-child(2n){
+    background: #f9f9f9;
+}
+table.tab_scroll tr .tdemptyR{
+    opacity: 0;
+}
+.table-bordered th, .table-bordered td {
+    border-left: 1px solid #ddd;
+    background: #fff;
+}
+p {
+    margin: 0 0 0px;
+    padding: 0;
+}
+table td p{
+    margin:0;
+    padding:0;
+}

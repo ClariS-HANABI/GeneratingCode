@@ -1,0 +1,35 @@
+
+server:
+  port: 11111
+
+spring:
+  http:
+    encoding.charset: UTF-8
+    encoding.enable: true
+    encoding.force: true
+
+  # 数据源配置
+  datasource:
+    #mysql
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.10.60:3306/bitnami_redmine
+#    username: redmine-ro
+#    password: "*Data18*"
+    #pgsql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.10.82:5432/bmw
+    username: datainsights
+    password: Data*2019*
+
+  mvc:
+    static-path-pattern: /static/**
+    view:
+      #jsp配置
+      prefix: /WEB-INF/view/
+      suffix: .jsp
+
+#公共配置与profiles选择无关
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configLocation: classpath:mybatis-config.xml
+
