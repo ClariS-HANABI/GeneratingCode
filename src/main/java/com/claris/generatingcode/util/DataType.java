@@ -11,11 +11,14 @@ import java.util.*;
 @EqualsAndHashCode
 public class DataType implements Serializable {
 
-    //类型
+    //通用类型
     private String type;
 
     //长度
     private String length;
+
+    //mapper的jdbc类型
+    private String jdbcType;
 
     //mysql类型
     private String mysqlType;
@@ -30,9 +33,10 @@ public class DataType implements Serializable {
      * @param mysqlType
      * @param pgsqlType
      */
-    public DataType(String type, String length, String mysqlType, String pgsqlType){
+    public DataType(String type, String length, String jdbcType, String mysqlType, String pgsqlType){
         this.type = type;
         this.length = length;
+        this.jdbcType = jdbcType;
         this.mysqlType = mysqlType;
         this.pgsqlType = pgsqlType;
     }

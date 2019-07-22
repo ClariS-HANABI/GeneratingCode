@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ${packagePath}.controller.BaseController;
 import com.github.pagehelper.*;
 import javax.servlet.http.*;
+import lombok.extern.log4j.*;
 import ${packagePath}.util.*;
 import ${packagePath}.service.${objectName}Service;
 <#if entityType == 1>
@@ -17,11 +18,10 @@ import ${packagePath}.entity.${objectName};
 /**
  * 创建时间：${nowDate?string("yyyy-MM-dd")}
  */
+@Log4j
 @Controller
 @RequestMapping(value = "/${prefixName}")
 public class ${objectName}Controller<#if entityType != 1> extends BaseController </#if>{
-
-	private static Logger logger = Logger.getLogger(${objectName}Controller.class);
 	
 	@Autowired
 	private ${objectName}Service ${prefixName}Service;
@@ -40,11 +40,21 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	*/
 	@RequestMapping(value = "/getById", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public Object getById(<#if entityType == 1>Long id</#if>){
+	public Object getById(<#if entityType == 1><#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if></#if>){
 	<#if entityType == 1>
+		<#if keyFiled.type == 'int'>
 		if(id == null || id.intValue() <= 0){
 			return null;
 		}
+		<#elseif keyFiled.type == 'bigint'>
+		if(id == null || id.longValue() <= 0){
+			return null;
+		}
+		<#else>
+		if(Tools.isEmpty(id)){
+			return null;
+		}
+		</#if>
 		Map<String, Object> map = null;
 		try {
 			${objectName} ${objectNameLower} = ${prefixName}Service.findById(id);
@@ -52,15 +62,23 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			map.put("${objectNameLower}", ${objectNameLower});
 		} catch (Exception e){
 			map = Tools.setResult(500, "查询发生异常");
+			log.error("根据id查询数据发生异常", e);
 		}
 		return map;
     <#else>
         PageData pd = this.getPageData();
         try{
-			PageData result = ${prefixName}Service.findById(new Long(pd.getInt("id")));
+		<#if keyFiled.type == 'int'>
+			Integer id = pd.getInt("id");
+		<#elseif keyFiled.type == 'bigint'>
+			Long id = Long.valueOf(pd.getString("id"));
+		<#else>
+			String id = pd.getString("id");
+		</#if>
+			PageData result = ${prefixName}Service.findById(id);
 			pd.setResult(200, "查询成功").put("${objectNameLower}", result);
         } catch(Exception e){
-			logger.error("根据id查询数据发生异常", e);
+			log.error("根据id查询数据发生异常", e);
 			pd.setResult(500, "查询发生异常");
         }
         return pd;
@@ -91,7 +109,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			pd.setResult(200, "查询分页数据成功").pd.put("pageInfo",page);
 		</#if>
 		} catch(Exception e){
-			logger.error("查询分页数据发生异常", e);
+			log.error("查询分页数据发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "查询分页数据发生异常");
 		<#else>
@@ -121,7 +139,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			pd.setResult(200, "查询列表成功").pd.put("list", list);
 		</#if>
 		} catch(Exception e){
-			logger.error("查询列表发生异常", e);
+			log.error("查询列表发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "查询列表发生异常");
 		<#else>
@@ -158,7 +176,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}
         }catch(Exception e){
-			logger.error("新增发生异常", e);
+			log.error("新增发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "新增发生异常");
 		<#else>
@@ -196,7 +214,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}
 		}catch(Exception e){
-			logger.error("修改发生异常", e);
+			log.error("修改发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "修改发生异常");
 		<#else>
@@ -212,16 +230,32 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	*/
 	@RequestMapping(value="/sud",method=RequestMethod.DELETE)
     @ResponseBody
-	public Object delete(<#if entityType == 1>Long id</#if>){
+	public Object delete(<#if entityType == 1><#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if></#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
-		Long id = new Long(pd.getInt("id"));
+		<#if keyFiled.type == 'int'>
+		Integer id = pd.getInt("id");
+		<#elseif keyFiled.type == 'bigint'>
+		Long id = Long.valueOf(pd.getString("id"));
+		<#else>
+		String id = pd.getString("id");
+		</#if>
 	<#else>
 		Map<String, Object> map = null;
 	</#if>
-		if(id == null || id.intValue() < 1){
+	<#if keyFiled.type == 'int'>
+		if(id == null || id.intValue() <= 0){
 			return null;
 		}
+	<#elseif keyFiled.type == 'bigint'>
+		if(id == null || id.longValue() <= 0){
+			return null;
+		}
+	<#else>
+		if(Tools.isEmpty(id)){
+			return null;
+		}
+	</#if>
 		try{
 			int result = ${prefixName}Service.delete(id);
 			if(result != 0){
@@ -238,7 +272,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}
 		} catch(Exception e){
-			logger.error("删除发生异常", e);
+			log.error("删除发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "删除发生异常");
 		<#else>
@@ -265,7 +299,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		}
 		try{
 			String[] ids = str.split(",");
-			if(ids != null && ids.length() > 0）{
+			if(ids != null && ids.length > 0) {
 				int delCount = ${prefixName}Service.deleteAll(ids);
 				if(delCount > 0){
 				<#if entityType == 1>
@@ -289,7 +323,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 				return null;
 			}
 		} catch(Exception e){
-			logger.error("批量删除发生异常", e);
+			log.error("批量删除发生异常", e);
 		<#if entityType == 1>
 			map = Tools.setResult(500, "批量删除发生异常");
 		<#else>

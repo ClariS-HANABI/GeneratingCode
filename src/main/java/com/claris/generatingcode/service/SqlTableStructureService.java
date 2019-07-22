@@ -1,13 +1,15 @@
 package com.claris.generatingcode.service;
 
 import com.claris.generatingcode.dao.DaoSupport;
+import com.claris.generatingcode.util.PageData;
+import com.claris.generatingcode.util.ProductCodeTool;
+import com.claris.generatingcode.util.ProductCodeTool.DatabaseType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.*;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
-import java.util.*;
-import com.claris.generatingcode.util.ProductCodeTool.DatabaseType;
-import com.claris.generatingcode.util.*;
+import java.util.List;
 
 @Service
 public class SqlTableStructureService {
@@ -23,15 +25,16 @@ public class SqlTableStructureService {
 
     /**
      * 根据表名获取表结构  MySql
+     *
      * @param pd
      * @return
      */
-    public List<PageData> getMySqlStructureByName(PageData pd){
+    public List<PageData> getMySqlStructureByName(PageData pd) {
         List<PageData> list = null;
-        try{
+        try {
             Object obj = dao.findForList("SqlTableStructureMapper.getMySqlStructureByName", pd);
-            list = obj == null ? null : (List<PageData>)obj;
-        }catch (Exception e){
+            list = obj == null ? null : (List<PageData>) obj;
+        } catch (Exception e) {
             logger.error("获取表结构发生异常", e);
         }
         return list;
@@ -39,15 +42,16 @@ public class SqlTableStructureService {
 
     /**
      * 根据表名获取表结构  PostgreSql
+     *
      * @param pd
      * @return
      */
-    public List<PageData> getPostgreSqlStructureByName(PageData pd){
+    public List<PageData> getPostgreSqlStructureByName(PageData pd) {
         List<PageData> list = null;
-        try{
+        try {
             Object obj = dao.findForList("SqlTableStructureMapper.getPostgreSqlStructureByName", pd);
-            list = obj == null ? null : (List<PageData>)obj;
-        }catch (Exception e){
+            list = obj == null ? null : (List<PageData>) obj;
+        } catch (Exception e) {
             logger.error("获取表结构发生异常", e);
         }
         return list;
@@ -56,15 +60,16 @@ public class SqlTableStructureService {
     /**
      * 查询表主键列相关信息  PostgreSql
      * 不排除有几个主键，默认取第一个，其它情况暂不进行处理
+     *
      * @param pd
      * @return
      */
-    public PageData getPrimaryKeyByName(PageData pd){
+    public PageData getPrimaryKeyByName(PageData pd) {
         PageData result = null;
-        try{
+        try {
             Object obj = dao.findForObject("SqlTableStructureMapper.getPrimaryKeyByName", pd);
-            result = obj == null ? null : (PageData)obj;
-        }catch (Exception e){
+            result = obj == null ? null : (PageData) obj;
+        } catch (Exception e) {
             logger.error("获取表主键列发生异常", e);
         }
         return result;
@@ -72,23 +77,24 @@ public class SqlTableStructureService {
 
     /**
      * 查询表是否存在
+     *
      * @param tableName
      * @return
      */
-    public int isExistTable(String tableName){
+    public int isExistTable(String tableName) {
         int isExist = 0;
-        try{
+        try {
             //获取数据库类型和数据库名称
             PageData pd = ProductCodeTool.getTableInfo(url);
             DatabaseType databaseType = DatabaseType.valueOf(pd.getString("databaseType"));
             //查询表是否存在
             pd.put("tableName", tableName);
-            if(DatabaseType.POSTGRESQL.equals(databaseType)){
+            if (DatabaseType.POSTGRESQL.equals(databaseType)) {
                 pd.put("selectType", 1);
             }
             Object obj = dao.findForObject("SqlTableStructureMapper.isExistTable", pd);
-            isExist = obj == null ? 0 : (int)obj;
-        }catch (Exception e){
+            isExist = obj == null ? 0 : (int) obj;
+        } catch (Exception e) {
             logger.error("查询表是否存在发生异常", e);
         }
         return isExist;
@@ -96,40 +102,41 @@ public class SqlTableStructureService {
 
     /**
      * 根据数据库表名获取表信息等数据
+     *
      * @param tableName 表名称
      * @return
      */
-    public PageData getTableInfo(String tableName){
+    public PageData getTableInfo(String tableName) {
         PageData pd = new PageData();
-        try{
+        try {
             //获取数据库类型和数据库名称
             PageData database = ProductCodeTool.getTableInfo(url);
             DatabaseType databaseType = DatabaseType.valueOf(database.getString("databaseType"));
             database.put("tableName", tableName);
             //获取表结构
             List<PageData> filedsInfo = null;
-            if(DatabaseType.MYSQL.equals(databaseType)){
+            if (DatabaseType.MYSQL.equals(databaseType)) {
                 filedsInfo = getMySqlStructureByName(database);
-                if(filedsInfo != null){
+                if (filedsInfo != null) {
                     //循环获取主键
-                    for(PageData var : filedsInfo){
-                        if("PRI".equals(var.getString("column_key"))){
+                    for (PageData var : filedsInfo) {
+                        if ("PRI".equals(var.getString("column_key"))) {
                             pd.put("pk", var);
                             break;
                         }
                     }
                 }
-            }else if(DatabaseType.POSTGRESQL.equals(databaseType)){
+            } else if (DatabaseType.POSTGRESQL.equals(databaseType)) {
                 filedsInfo = getPostgreSqlStructureByName(database);
             }
-            if(filedsInfo == null){
-                return pd.setResult(0,"该表无字段，请输入新的表名称！");
+            if (filedsInfo == null) {
+                return pd.setResult(0, "该表无字段，请输入新的表名称！");
             }
             pd.put("databaseType", database.get("databaseType"));
             pd.put("databaseName", database.get("databaseName"));
             pd.put("filedsInfo", filedsInfo);
             pd.setResult(1, "获取成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取表信息等数据发生异常", e);
         }
         return pd;

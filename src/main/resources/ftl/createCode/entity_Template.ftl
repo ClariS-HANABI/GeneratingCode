@@ -3,6 +3,7 @@ package ${packagePath}.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.alibaba.fastjson.annotation.JSONField;
+import java.util.*;
 
 @NoArgsConstructor
 @Getter

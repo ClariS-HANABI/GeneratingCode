@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.extern.log4j.*;
 <#if entityType == 1>
 import ${packagePath}.entity.${objectName};
 </#if>
@@ -16,6 +17,7 @@ import ${packagePath}.dao.${objectName}Mapper;
 </#if>
 import ${packagePath}.util.*;
 
+@Log4j
 @Service
 public class ${objectName}Service{
 
@@ -26,8 +28,6 @@ public class ${objectName}Service{
 	@Autowired
 	private ${objectName}Mapper ${prefixName}Mapper;
 </#if>
-
-	private static Logger logger = Logger.getLogger(${objectName}Service.class);
 
 
 	/**
@@ -43,7 +43,7 @@ public class ${objectName}Service{
 			result = ${prefixName}Mapper.save(record);
 		</#if>
 		}catch(Exception e){
-			logger.error("新增发生异常", e);
+			log.error("新增发生异常", e);
 		}
 		return result;
 	}
@@ -51,7 +51,7 @@ public class ${objectName}Service{
 	/**
 	* 删除
 	*/
-	public int delete(Long id){
+	public int delete(<#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>){
 	    ${paramsType} record = new ${paramsType}();
 		int result = 0;
 		try{
@@ -67,7 +67,7 @@ public class ${objectName}Service{
 			result = ${prefixName}Mapper.delete(record);
 		</#if>
 		}catch(Exception e){
-			logger.error("删除发生异常", e);
+			log.error("删除发生异常", e);
 		}
 		return result;
 	}
@@ -85,7 +85,7 @@ public class ${objectName}Service{
 			result = ${prefixName}Mapper.edit(record);
 		</#if>
 		}catch(Exception e){
-			logger.error("修改发生异常", e);
+			log.error("修改发生异常", e);
 		}
 		return result;
 	}
@@ -107,7 +107,7 @@ public class ${objectName}Service{
 		Object obj = dao.save("${objectName}Mapper.saveList", <#if entityType == 1>map<#else>pd</#if>);
 		result = obj == null? 0:(int)obj;
 	<#else>
-		result = ${prefixName}Mapper.save(<#if entityType == 1>map<#else>pd</#if>);
+		result = ${prefixName}Mapper.saveList(<#if entityType == 1>map<#else>pd</#if>);
 	</#if>
 		return result;
 	}
@@ -137,7 +137,7 @@ public class ${objectName}Service{
 	/**
 	* 通过id获取数据
 	*/
-	public ${paramsType} findById(Long id){
+	public ${paramsType} findById(<#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>){
 		${paramsType} result = new ${paramsType}();
 		try{
 		<#if entityType == 1>
@@ -152,7 +152,7 @@ public class ${objectName}Service{
 			result = ${prefixName}Mapper.findById(result);
 		</#if>
 		}catch(Exception e){
-			logger.error("查询发生异常", e);
+			log.error("查询发生异常", e);
 		}
 		return result;
 	}
@@ -170,7 +170,7 @@ public class ${objectName}Service{
 			result = ${prefixName}Mapper.findByInfo(param);
 		</#if>
 		}catch(Exception e){
-			logger.error("查询发生异常", e);
+			log.error("查询发生异常", e);
 		}
 		return result;
 	}
@@ -188,7 +188,7 @@ public class ${objectName}Service{
 			list = ${prefixName}Mapper.listAll(param);
 		</#if>
 		}catch(Exception e){
-			logger.error("查询列表发生异常", e);
+			log.error("查询列表发生异常", e);
 		}
 		return list;
 	}
@@ -203,10 +203,10 @@ public class ${objectName}Service{
 			Object obj = dao.findForList("${objectName}Mapper.getListByMap", params);
 			list = obj == null? null:(List<<#if entityType == 1>Map<String, Object><#else>PageData</#if>>)obj;
 		<#else>
-			list = ${prefixName}Mapper.listAll(params);
+			list = ${prefixName}Mapper.getListByMap(params);
 		</#if>
 		}catch(Exception e){
-			logger.error("查询列表发生异常", e);
+			log.error("查询列表发生异常", e);
 		}
 		return list;
 	}
