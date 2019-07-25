@@ -1,9 +1,8 @@
 package com.claris.generatingcode.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.claris.generatingcode.service.SqlTableStructureService;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +26,168 @@ public class ProductCodeTool {
     //判断字符串是否为正数
     private static Pattern pattern = Pattern.compile("[1-9]+\\d*");
 
+
+    /**
+     * 根据类名和配置参数生成代码
+     *
+     * @param objectName 类名
+     * @param prefixName 前缀名称
+     * @param params     配置参数集合
+     * @param entityType 实体类类型
+     * @param daoType    dao类型
+     * @param addPackage 是否在生成时加上层路径
+     * @throws Exception
+     */
+    public static void printFileByObject(String objectName, String prefixName, Map<String, Object> params,
+                                         Integer entityType, Integer daoType, boolean addPackage) throws Exception {
+        //存放路径
+        String filePath = "ftl/code/";
+        //ftl路径
+        String ftlPath = "createCode";
+        //如果是实体类，生成entity
+        if (entityType == 1) {
+            Freemarker.printFile("entity_Template.ftl", params, (addPackage ? "/pojo/" : "")
+                    + objectName + ".java", filePath, ftlPath);
+        }
+        //如果是普通DAO，生成DAO
+        if (daoType == 1) {
+            Freemarker.printFile("dao_Template.ftl", params, (addPackage ? "/dao/" : "")
+                    + objectName + "Mapper.java", filePath, ftlPath);
+        }
+        //生成controller
+        Freemarker.printFile("my_controller_Template.ftl", params, (addPackage ? "/controller/" : "")
+                + objectName + "Controller.java", filePath, ftlPath);
+        //生成service
+        Freemarker.printFile("service_Template.ftl", params, (addPackage ? "/service/" : "")
+                + objectName + "Service.java", filePath, ftlPath);
+        //生成mybatis xml
+        Freemarker.printFile("mapper_mySql_Template.ftl", params, "mapper/mySql/" + objectName + "Mapper.xml", filePath, ftlPath);
+        Freemarker.printFile("mapper_postgreSql_Template.ftl", params, "mapper/postgreSql/" + objectName + "Mapper.xml", filePath, ftlPath);
+        //生成SQL脚本
+        Freemarker.printFile("mysql_sql_Template.ftl", params, "sql/mySql/" + prefixName + ".sql", filePath, ftlPath);
+        Freemarker.printFile("postgreSql_sql_Template.ftl", params, "sql/postgreSql/" + prefixName + ".sql", filePath, ftlPath);
+        //生成jsp页面
+        Freemarker.printFile("myjsp_Template.ftl", params, (addPackage ? "/view/" : "") + prefixName + "View.jsp", filePath, ftlPath);
+    }
+
+    /**
+     * 设置生成参数
+     *
+     * @param params      参数集合
+     * @param fieldList   字段属性集合
+     * @param zindex      字段数量
+     * @param packagePath 包路径
+     * @param objectName  类名
+     * @param tableName   表名
+     * @param prefixName  前缀名称
+     * @param entityType  实体类类型
+     */
+    public static void setParamsInfo(Map<String, Object> params, List<String[]> fieldList, Integer zindex, String packagePath,
+                                     String objectName, String tableName, String prefixName, Integer entityType) {
+        //字段属性集合
+        params.put("fieldList", fieldList);
+        //字段数量
+        params.put("zindex", zindex);
+        //包路径
+        params.put("packagePath", packagePath);
+        //类名
+        params.put("objectName", objectName);
+        //表名称
+        params.put("tableName", tableName);
+        //类名(全小写)
+        params.put("objectNameLower", objectName.toLowerCase());
+        //类名(全大写)
+        params.put("objectNameUpper", objectName.toUpperCase());
+        //mapper、service之类的名称前缀
+        params.put("prefixName", prefixName);
+        //当前日期
+        params.put("nowDate", new Date());
+        //paramsType和result的类型
+        params.put("entityName", entityType == 1 ? packagePath + ".entity." + objectName : "pd");
+        params.put("result", entityType == 1 ? "resultMap='BaseResultMap'" : "resultType='pd'");
+        params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
+        params.put("paramsType", entityType == 1 ? objectName : "PageData");
+    }
+
+    /**
+     * 设置主键信息
+     *
+     * @param params                   参数集合
+     * @param tableInfo                表结构等信息
+     * @param fieldList                字段属性集合
+     * @param tableName                表名
+     * @param sqlTableStructureService 数据库查询对象
+     */
+    public static void setKeyFiled(Map<String, Object> params, PageData tableInfo, List<String[]> fieldList,
+                                   String tableName, SqlTableStructureService sqlTableStructureService) {
+        //主键属性
+        PageData keyFiled = new PageData();
+        //当前连接数据库类型
+        DatabaseType databaseType = DatabaseType.valueOf(tableInfo.getString("databaseType"));
+        //主键信息
+        PageData pk = null;
+        switch (databaseType) {
+            //如果是mysql
+            case MYSQL:
+                //获取主键信息
+                pk = (PageData) tableInfo.getObject("pk");
+                if (pk != null) {
+                    String data_type = pk.getString("data_type");
+                    keyFiled.put("name", pk.getString("column_name")).put("mysqlType", pk.getString("column_type"));
+                    if ("bigint".equals(data_type)) {
+                        keyFiled.put("pgsqlType", "int8").put("type", "bigint");
+                    } else if ("int".equals(data_type)) {
+                        keyFiled.put("pgsqlType", "int4").put("type", "int");
+                    } else {
+                        keyFiled.put("pgsqlType", "varchar(55)").put("type", "varchar");
+                    }
+                    //删除主键列
+                    for (int i = 0; i < fieldList.size(); i++) {
+                        String[] str = fieldList.get(i);
+                        if (str[5].equals(pk.getString("column_name"))) {
+                            keyFiled.put("filed", str[0]);
+                            fieldList.remove(i);
+                            break;
+                        }
+                    }
+                }
+                //如果没有主键
+                else {
+
+                }
+                break;
+            //如果是pgsql
+            case POSTGRESQL:
+                //获取主键信息
+                pk = sqlTableStructureService.getPrimaryKeyByName(new PageData().put("tableName", tableName));
+                if (pk != null) {
+                    for (int i = 0; i < fieldList.size(); i++) {
+                        String[] str = fieldList.get(i);
+                        if (str[5].equals(pk.getString("colname"))) {
+                            //设置主键信息
+                            keyFiled.put("name", pk.getString("colname")).put("pgsqlType", pk.getString("typename"));
+                            if (str[1].equals("int")) {
+                                keyFiled.put("mysqlType", "int(11)").put("type", "int");
+                            } else if (str[1].equals("bigint")) {
+                                keyFiled.put("mysqlType", "int(18)").put("type", "bigint");
+                            } else {
+                                keyFiled.put("mysqlType", "varchar(55)").put("type", "varchar");
+                            }
+                            keyFiled.put("filed", str[0]);
+                            //删除主键列
+                            fieldList.remove(i);
+                            break;
+                        }
+                    }
+                }
+                //如果没有主键
+                else {
+
+                }
+                break;
+        }
+        params.put("keyFiled", keyFiled);
+    }
 
     /**
      * 获取类名大写字母下标

@@ -135,12 +135,36 @@ public class SqlTableStructureService {
             pd.put("databaseType", database.get("databaseType"));
             pd.put("databaseName", database.get("databaseName"));
             pd.put("filedsInfo", filedsInfo);
-            pd.setResult(1, "获取成功");
         } catch (Exception e) {
             logger.error("获取表信息等数据发生异常", e);
         }
         return pd;
     }
 
+    /**
+     * 获取数据库所有表
+     * @return
+     */
+    public List<PageData> getAllTable(){
+        List<PageData> list = null;
+        try{
+            //获取数据库类型和数据库名称
+            PageData database = ProductCodeTool.getTableInfo(url);
+            DatabaseType databaseType = DatabaseType.valueOf(database.getString("databaseType"));
+            //如果是mysql
+            String functionName = "";
+            if (DatabaseType.MYSQL.equals(databaseType)) {
+                functionName = "getMySqlAllTable";
+            } //如果是pgsql
+            else if (DatabaseType.POSTGRESQL.equals(databaseType)) {
+                functionName = "getPostgreSqlAllTable";
+            }
+            Object obj = dao.findForList("SqlTableStructureMapper." +  functionName, database);
+            list = obj != null ? (List<PageData>)obj : null;
+        }catch(Exception e){
+            logger.error("获取所有表数据发生异常", e);
+        }
+        return list;
+    }
 
 }

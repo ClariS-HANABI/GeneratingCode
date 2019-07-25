@@ -21,7 +21,7 @@
 		<script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
 		<script src="static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 		<style type="text/css">
-			#dialog-add{width:100%; height:100%; position:fixed; top:0px; z-index:10000; display:none;}
+			.dialog-add{width:100%; height:100%; position:fixed; top:0px; z-index:10000; display:none;}
 			.commitopacity{position:absolute; width:100%; height:500px; background:#7f7f7f; filter:alpha(opacity=50);
 				-moz-opacity:0.5; -khtml-opacity: 0.5; opacity: 0.5; top:0px; z-index:99999;}
 			.commitbox{width:55%; padding-left:21%; padding-top:6%; position:absolute; top:0px; z-index:99999;}
@@ -40,9 +40,22 @@
 			.myClass td{
 				margin-bottom: 10px;
 			}
-			.myClass input[type=radio],input[type=checkbox]{
+			.myClass input[type=radio], #all-table input[type=radio], input[type=checkbox]{
 				opacity: initial;
 				position: relative;
+			}
+			#all-table{
+				display: none;
+				width: 100%;
+				height: 550px;
+				border-top: 10px solid #DDD;  border-bottom: 10px solid #DDD; background-color: #f9f9f9;
+				overflow-x: auto;
+			}
+			#table-list{
+				margin: 0px 20px 20px 5%;
+			}
+			.my_check{
+				margin: 10px 5px 10px 5px;
 			}
 		</style>
 	</head>
@@ -52,7 +65,8 @@
 	<input type="hidden" name="msgIndex" id="msgIndex" value="" />
 	<input type="hidden" name="itemType" value="varchar" />
 	<input type="hidden" name="isNotNull" id="isNotNull" value="1" />
-	<div id="dialog-add">
+	<!-- 添加自定义字段窗口 -->
+	<div id="add-window" class="dialog-add">
 		<div class="commitopacity" style="height: 100%;"></div>
 	  	<div class="commitbox">
 		  	<div class="commitbox_inner">
@@ -118,9 +132,11 @@
 		  	</div>
 	  	</div>
 	</div>
+	<!-- 生成代码选项表单 -->
 	<form name="Form" id="Form" method="post">
 		<input type="hidden" name="zindex" id="zindex" value="0">
 		<div id="zhongxin" style="margin-top: 30px;">
+			<!-- 自动生成配置 -->
 			<table style="margin-top: 10px;margin-bottom: 20px;width: 100%;" class="myClass">
 				<tr>
 					<td style="width:7%;text-align: right;font-weight: bold;">包路径：</td>
@@ -147,13 +163,15 @@
 					<td>
 						<input type="radio" id="onCreate" name="createType" value="2" checked="checked"/>自创建
 						<input type="radio" id="onGet" name="createType" value="1" style="margin-left: 20px;"/>数据库表
+						<input type="radio" id="onGetAll" name="createType" value="0" style="margin-left: 20px;"/>多表生成
 						<div style="margin-left: 30px;display: inline-block;">
 							<span id="createName">类名</span>：
-							<input type="text" name="objectName" id="objectName" value="" placeholder="请输入名称" style="width:370px;padding-left: 10px;"/>
+							<input type="text" name="objectName" id="objectName" value="" placeholder="请输入名称" style="width:250px;padding-left: 10px;"/>
 						</div>
 					</td>
 				</tr>
 			</table>
+			<!-- 自定义字段列表 -->
 			<table id="table_report" class="table table-striped table-bordered table-hover">
 					<thead>
 						<tr>
@@ -167,14 +185,25 @@
 					</thead>
 					<tbody id="fields"></tbody>
 			</table>
+			<!-- 操作选项 -->
 			<table id="table_foot" class="table table-striped table-bordered table-hover">
 				<tr>
 					<td style="text-align: center;" colspan="100">
 						<a class="btn btn-app btn-info btn-mini" onclick="dialog_open();"><i class="icon-ok"></i>新增</a>
-						<a class="btn btn-app btn-danger btn-mini" onclick="top.Dialog.close();"><i class="icon-share-alt"></i>取消</a>
+						<a class="btn btn-app btn-danger btn-mini" onclick="clean_add_filed();"><i class="icon-remove-sign"></i>清空</a>
 					</td>
 				</tr>
 			</table>
+			<!-- 多表生成窗口 -->
+			<div id="all-table">
+				<div style="margin: 20px 5% 10px;">
+					<input id='check_all' type='radio' value='all'/>
+					<span style="font-weight: bold; font-size: 14px;">全选</span>
+					<input id='cencel_all' type='radio' value='cancel' style="margin-left: 20px;"/>
+					<span style="font-weight: bold; font-size: 14px;">取消全选</span>
+				</div>
+				<div id="table-list"></div>
+			</div>
 		</div>
 		<div id="zhongxin2" class="center" style="display:none">
 			<br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4>
@@ -196,16 +225,30 @@
 		var arField = new Array();
 		var index = 0;
 
+		//初始化数据
+		allTable();
+
 		$("#onCreate").click(function () {
 			$("#table_report").show();
 			$("#table_foot").show();
 			$("#createName").text("类名");
+			$("#objectName").parent().show();
+			$("#all-table").hide();
 		});
 
 		$("#onGet").click(function () {
 			$("#table_report").hide();
 			$("#table_foot").hide();
 			$("#createName").text("表名");
+			$("#objectName").parent().show();
+			$("#all-table").hide();
+		});
+
+		$("#onGetAll").click(function () {
+			$("#table_report").hide();
+			$("#table_foot").hide();
+			$("#objectName").parent().hide();
+			$("#all-table").show();
 		});
 
 		$("#itemType").change(function(){
@@ -217,6 +260,56 @@
 			}
 			setType(value);
 		});
+
+		//全选事件
+		$("#check_all").click(function(){
+			//如果表集合不为空
+			if($("#table-list").html() != null && $("#table-list").html() !=  ''){
+				$("#table-list input[type='checkbox']").prop("checked", true);
+				$("#cencel_all").attr("checked", false);
+			}
+		});
+
+		//取消全选事件
+		$("#cencel_all").click(function(){
+			//如果表集合不为空
+			if($("#table-list").html() != null && $("#table-list").html() !=  ''){
+				$("#table-list input[type='checkbox']:checked").prop("checked", false).removeAttr("checked");
+				$("#check_all").attr("checked", false);
+			}
+		});
+
+		//获取数据库全部表
+		function allTable(){
+			$.ajax({
+				type: "POST",
+				url: "/createCode/allTable",
+				dataType: "json",
+				success: function(result){
+					if(result.list != null){
+						var list = result.list;
+						if(list != null && list.length > 0){
+							var div_row = 14;
+							//计算有多少个单元格
+							//var div_count = list.length <= div_row ? 1 : list.length % div_row == 0 ? list.length / div_row : list.length / div_row + 1;
+							var div = $("<div style='width: 250px; display: inline-block;'></div>");
+							for(var i = 0; i< list.length; i++){
+								var item = $("<div class='my_check'></div>").append("<input type='checkbox' value='" +
+										list[i].table_name + "' style='margin-right: 5px;'/>" + list[i].table_name);
+								//添加表到单元格中
+								div.append(item);
+								if((i + 1) % div_row == 0){
+									$("#table-list").append(div);
+									div = $("<div style='width: 250px; display: inline-block;'></div>");
+								}else if(i + 1 == list.length){
+									$("#table-list").append(div);
+								}
+							}
+						}
+					}
+				}
+			});
+		}
 
 		//生成
 		function commit(){
@@ -256,38 +349,47 @@
 				}
 			}
 
-			if($("#objectName").val()==""){
-				$("#objectName").tips({
-					side:3,
-					msg: $("#createType").val() == 1?"请输入类名":"请输入表名",
-					bg:'#AE81FF',
-					time:2
-				});
-				$("#objectName").focus();
-				return false;
-			}/*else{
-				var headstr = $("#objectName").val().substring(0,1);
-				var pat = new RegExp("^[a-z0-9]+$");
-				if(pat.test(headstr)){
+			//如果不是多表生成
+			if(!$("#onGetAll").is(":checked")){
+				if($("#objectName").val()== ""){
 					$("#objectName").tips({
 						side:3,
-						msg:'类名首字母必须为大写字母',
+						msg: $("#onGet").is(":checked")?"请输入表名":"请输入类名",
 						bg:'#AE81FF',
 						time:2
 					});
 					$("#objectName").focus();
 					return false;
 				}
-			}*/
+			}
 
+			//如果是自定义字段
 			if($("#onCreate").is(":checked")){
-				if($("#fields").html() == ''){
+				var objectName = $("#objectName").val();
+				var pat = new RegExp("^[A-Z]");
+				if(!pat.test(objectName)){
+					$("#objectName").tips({
+						side:3,
+						msg: "类名首字母必须大写",
+						bg:'#AE81FF',
+						time:2
+					});
+					$("#objectName").focus();
+					return false;
+				}else if($("#fields").html() == ''){
 					$("#table_report").tips({
 						side:3,
 						msg:'请添加属性',
 						bg:'#AE81FF',
 						time:2
 					});
+					return false;
+				}
+			} //如果是多表生成
+			else if($("#onGetAll").is(":checked")){
+				var len = $("#table-list input[type='checkbox']:checked").length;
+				if(len == null || len == 0){
+					alert("未选择表！");
 					return false;
 				}
 			}
@@ -300,6 +402,10 @@
             if($("#onCreate").is(":checked")){
                 $("#Form").attr("action", "createCode/proCodeOnItems");
             }
+            //如果是多表生成
+            else if($("#onGetAll").is(":checked")){
+				$("#Form").attr("action", "createCode/proCodeOnAllTable");
+			}
             //如果是数据库表
             else{
                 $("#Form").attr("action", "createCode/proCodeOnTable");
@@ -338,7 +444,23 @@
 						}
 					});
 				}
-			}else{
+			} //如果是多表生成
+			else if($("#onGetAll").is(":checked")){
+				var tableNames = "";
+				$("#table-list input[type='checkbox']:checked").each(function(){
+					tableNames += $(this).val() + ",";
+				});
+				$("#objectName").val(tableNames.substring(0, tableNames.length -1));
+				$("#Form").submit();
+				$("#productc").tips({
+					side:3,
+					msg:'提交成功,等待下载',
+					bg:'#AE81FF',
+					time:9
+				});
+				setTimeout("top.Dialog.close()",10000);
+			}
+			else{
                 $("#Form").submit();
 				$("#productc").tips({
 					side:3,
@@ -468,7 +590,7 @@
 				editArrayField(fields, msgIndex);
 			}
 			$("#msgIndex").val("");
-			$("#dialog-add").css("display","none");
+			$("#add-window").css("display","none");
 		}
 
 		//打开编辑属性(新增)
@@ -476,7 +598,7 @@
 			//默认按上一次设置的属性
 			$("#itemName").val('');
 			$("#remark").val('');
-			$("#dialog-add").css("display","block");
+			$("#add-window").css("display","block");
 		}
 
 		//打开编辑属性(修改)
@@ -494,13 +616,23 @@
 				$("#form-field-radio5").attr("checked",true);
 			}
 			$("#isNotNull").val(efieldarray[4]);
-			$("#dialog-add").css("display","block");
+			$("#add-window").css("display","block");
 		}
 
 		//关闭编辑属性
 		function cancel(){
 			$("#msgIndex").val("");
-			$("#dialog-add").css("display","none");
+			$("#add-window").css("display","none");
+		}
+
+		//清空自定义字段
+		function clean_add_filed(){
+			if(!confirm("确认要清空自定义字段吗？")){
+				return;
+			}
+			$("#fields").html("");
+			index = 0;
+			$("#zindex").val(index);
 		}
 
 		//赋值类型

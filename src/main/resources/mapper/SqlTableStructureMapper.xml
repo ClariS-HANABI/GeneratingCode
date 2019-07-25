@@ -3,6 +3,16 @@
 <mapper namespace="SqlTableStructureMapper">
 
 
+    <!-- 查询数据库的所有表  MySql -->
+    <select id="getMySqlAllTable" parameterType="pd" resultType="pd">
+        select * from information_schema.tables where table_schema = #{databaseName} and table_type = 'BASE TABLE'
+    </select>
+
+    <!-- 查询数据库的所有表  PostgreSql -->
+    <select id="getPostgreSqlAllTable" parameterType="pd" resultType="pd">
+        select *, tablename as "table_name" from pg_tables where schemaname='public' order by tablename
+    </select>
+
     <!-- 根据表名获取表结构  MySql -->
     <select id="getMySqlStructureByName" parameterType="pd" resultType="pd">
         select
