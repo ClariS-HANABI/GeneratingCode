@@ -2,7 +2,6 @@ package com.claris.generatingcode.controller;
 
 import com.claris.generatingcode.util.*;
 import org.springframework.web.context.request.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 

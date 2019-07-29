@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/createCode")
+@RequestMapping(value = "/create-code")
 public class CreateCodeController extends BaseController {
 
     private static Logger logger = Logger.getLogger(CreateCodeController.class);
