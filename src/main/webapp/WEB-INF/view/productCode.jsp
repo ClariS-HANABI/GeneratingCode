@@ -283,7 +283,7 @@
 		function allTable(){
 			$.ajax({
 				type: "POST",
-				url: "/createCode/allTable",
+				url: "/create-code/allTable",
 				dataType: "json",
 				success: function(result){
 					if(result.list != null){
@@ -400,15 +400,15 @@
 
             //如果是自创建的
             if($("#onCreate").is(":checked")){
-                $("#Form").attr("action", "createCode/proCodeOnItems");
+                $("#Form").attr("action", "create-code/proCodeOnItems");
             }
             //如果是多表生成
             else if($("#onGetAll").is(":checked")){
-				$("#Form").attr("action", "createCode/proCodeOnAllTable");
+				$("#Form").attr("action", "create-code/proCodeOnAllTable");
 			}
             //如果是数据库表
             else{
-                $("#Form").attr("action", "createCode/proCodeOnTable");
+                $("#Form").attr("action", "create-code/proCodeOnTable");
             }
 
 			//如果使用数据库表，提示用户确认数据库连接配置
@@ -418,7 +418,7 @@
 				}else{
 					$.ajax({
 						type: "POST",
-						url: "createCode/isExistTable",
+						url: "create-code/isExistTable",
 						data: {
 							tableName: $("#objectName").val()
 						},

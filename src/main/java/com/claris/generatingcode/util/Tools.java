@@ -236,7 +236,7 @@ public class Tools {
 	 * @return 为空则返回true，不否则返回false
 	 */
 	public static boolean isEmpty(String s) {
-		return s == null || "".equals(s) || "null".equals(s);
+		return s==null || "".equals(s) || "''".equals(s) || "\"\"".equals(s) || "null".equals(s);
 	}
 
 	/**
