@@ -104,7 +104,7 @@ public class ProductCodeTool {
         params.put("nowDate", new Date());
         //paramsType和result的类型
         params.put("entityName", entityType == 1 ? packagePath + ".entity." + objectName : "pd");
-        params.put("result", entityType == 1 ? "resultMap='BaseResultMap'" : "resultType='pd'");
+        params.put("result", entityType == 1 ? "resultMap=\"BaseResultMap\"" : "resultType=\"pd\"");
         params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
         params.put("paramsType", entityType == 1 ? objectName : "PageData");
     }
