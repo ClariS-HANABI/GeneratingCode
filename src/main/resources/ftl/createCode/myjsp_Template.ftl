@@ -470,7 +470,7 @@
     function getData(id){
         $.ajax({
             type: "GET",
-            url: "${prefixName}/getById",
+            url: "${prefixName}/id",
             data: {
                 id: id
             },
@@ -582,7 +582,7 @@
                 //发送ajax请求删除
                 $.ajax({
                     type: "DELETE",
-                    url: "${prefixName}/delByIds",
+                    url: "${prefixName}/ids",
                     data: {
                         str: del_idstr
                     },

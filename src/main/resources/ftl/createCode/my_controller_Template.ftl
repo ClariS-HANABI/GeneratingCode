@@ -38,7 +38,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 根据id查询数据
 	*/
-	@RequestMapping(value = "/getById", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/id", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public Object getById(<#if entityType == 1><#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if></#if>){
 	<#if entityType == 1>
@@ -286,7 +286,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 批量删除
 	*/
-	@RequestMapping(value="/delByIds",method=RequestMethod.DELETE)
+	@RequestMapping(value="/ids",method=RequestMethod.DELETE)
 	@ResponseBody
 	public Object delByIds(String str){
 	<#if entityType != 1>
