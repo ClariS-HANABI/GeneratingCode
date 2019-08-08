@@ -12,7 +12,7 @@ import lombok.extern.log4j.*;
 import ${packagePath}.util.*;
 import ${packagePath}.service.${objectName}Service;
 <#if entityType == 1>
-import ${packagePath}.entity.${objectName};
+import ${packagePath}.pojo.${objectName};
 </#if>
 
 /**

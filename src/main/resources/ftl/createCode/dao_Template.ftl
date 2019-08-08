@@ -4,7 +4,7 @@ import java.util.*;
 import org.apache.ibatis.annotations.Mapper;
 import ${packagePath}.util.*;
 <#if entityType == 1>
-import ${packagePath}.entity.${objectName};
+import ${packagePath}.pojo.${objectName};
 </#if>
 
 @Mapper

@@ -1,4 +1,4 @@
-package ${packagePath}.entity;
+package ${packagePath}.pojo;
 
 import lombok.*;
 import lombok.experimental.Accessors;

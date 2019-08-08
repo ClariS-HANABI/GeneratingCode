@@ -46,7 +46,7 @@ public class ProductCodeTool {
         String ftlPath = "createCode";
         //如果是实体类，生成entity
         if (entityType == 1) {
-            Freemarker.printFile("entity_Template.ftl", params, (addPackage ? "/pojo/" : "")
+            Freemarker.printFile("pojo_Template.ftl", params, (addPackage ? "/pojo/" : "")
                     + objectName + ".java", filePath, ftlPath);
         }
         //如果是普通DAO，生成DAO
@@ -103,7 +103,7 @@ public class ProductCodeTool {
         //当前日期
         params.put("nowDate", new Date());
         //paramsType和result的类型
-        params.put("entityName", entityType == 1 ? packagePath + ".entity." + objectName : "pd");
+        params.put("entityName", entityType == 1 ? packagePath + ".pojo." + objectName : "pd");
         params.put("result", entityType == 1 ? "resultMap=\"BaseResultMap\"" : "resultType=\"pd\"");
         params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
         params.put("paramsType", entityType == 1 ? objectName : "PageData");

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.log4j.*;
 <#if entityType == 1>
-import ${packagePath}.entity.${objectName};
+import ${packagePath}.pojo.${objectName};
 </#if>
 <#if daoType != 1>
 import ${packagePath}.dao.DaoSupport;
