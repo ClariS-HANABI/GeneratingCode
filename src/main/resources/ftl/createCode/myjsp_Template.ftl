@@ -440,7 +440,7 @@
                 var btnClassName = "";
                 if(result.code == 200){
                     btnClassName = " btn-success";
-                }else if(result.code == 205){
+                }else if(result.code == 206){
                     btnClassName = " btn-warning";
                 }else{
                     btnClassName = " btn-danger";
@@ -503,7 +503,7 @@
                 var btnClassName = "";
                 if(result.code == 200){
                     btnClassName = " btn-success";
-                }else if(result.code == 205){
+                }else if(result.code == 206){
                     btnClassName = " btn-warning";
                 }else{
                     btnClassName = " btn-danger";
@@ -538,7 +538,7 @@
                         var btnClassName = "";
                         if(result.code == 200){
                             btnClassName = " btn-success";
-                        }else if(result.code == 205){
+                        }else if(result.code == 206){
                             btnClassName = " btn-warning";
                         }else{
                             btnClassName = " btn-danger";
@@ -591,7 +591,7 @@
                         var btnClassName = "";
                         if(result.code == 200){
                             btnClassName = " btn-success";
-                        }else if(result.code == 205){
+                        }else if(result.code == 206){
                             btnClassName = " btn-warning";
                         }else{
                             btnClassName = " btn-danger";
