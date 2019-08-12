@@ -53,6 +53,7 @@
 			}
 			#table-list{
 				margin: 0px 20px 20px 5%;
+				width: 100%;
 			}
 			.my_check{
 				margin: 10px 5px 10px 5px;
@@ -291,7 +292,14 @@
 						if(list != null && list.length > 0){
 							var div_row = 14;
 							//计算有多少个单元格
-							//var div_count = list.length <= div_row ? 1 : list.length % div_row == 0 ? list.length / div_row : list.length / div_row + 1;
+							var div_count = list.length <= div_row ? 1 : list.length % div_row == 0 ?
+									parseInt(list.length / div_row) : parseInt(list.length / div_row) + 1;
+							if(div_count > 6){
+								//如果超出宽度，根据单元格数量对宽度进行加长
+								var new_width = 100 + 20 * (div_count - 6);
+								console.log(new_width);
+								$("#table-list").css("width", new_width + "%");
+							}
 							var div = $("<div style='width: 250px; display: inline-block;'></div>");
 							for(var i = 0; i< list.length; i++){
 								var item = $("<div class='my_check'></div>").append("<input type='checkbox' value='" +
