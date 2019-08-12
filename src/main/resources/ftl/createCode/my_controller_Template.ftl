@@ -170,9 +170,9 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}else{
 			<#if entityType == 1>
-				map = Tools.setResult(205, "添加失败");
+				map = Tools.setResult(206, "添加失败");
 			<#else>
-				pd.setResult(205, "添加失败");
+				pd.setResult(206, "添加失败");
 			</#if>
 			}
         }catch(Exception e){
@@ -208,9 +208,9 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}else{
 			<#if entityType == 1>
-				map = Tools.setResult(205, "修改失败");
+				map = Tools.setResult(206, "修改失败");
 			<#else>
-				pd.setResult(205, "修改失败");
+				pd.setResult(206, "修改失败");
 			</#if>
 			}
 		}catch(Exception e){
@@ -266,9 +266,9 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 			</#if>
 			}else{
 			<#if entityType == 1>
-				map = Tools.setResult(205, "删除失败");
+				map = Tools.setResult(206, "删除失败");
 			<#else>
-				pd.setResult(205, "删除失败");
+				pd.setResult(206, "删除失败");
 			</#if>
 			}
 		} catch(Exception e){
@@ -309,9 +309,9 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 				</#if>
 				}else{
 				<#if entityType == 1>
-					map = Tools.setResult(205, "批量删除失败");
+					map = Tools.setResult(206, "批量删除失败");
 				<#else>
-					pd.setResult(205, "批量删除失败");
+					pd.setResult(206, "批量删除失败");
 				</#if>
 				}
 			<#if entityType == 1>
