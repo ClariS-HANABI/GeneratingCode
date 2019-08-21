@@ -17,7 +17,8 @@ spring:
 #    password: "*Data18*"
     #pgsql
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.10.82:5432/bmw
+    #url: jdbc:postgresql://192.168.10.82:5432/bmw
+    url: jdbc:postgresql://192.168.10.82:5432/career
     username: datainsights
     password: Data*2019*
 

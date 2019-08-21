@@ -33,14 +33,14 @@ public class ${objectName}Service{
 	/**
 	* 新增
 	*/
-	public int save(${paramsType} record){
+	public int add(${paramsType} record){
 		int result = 0;
 		try{
 		<#if daoType != 1>
-			Object obj = dao.save("${objectName}Mapper.save", record);
+			Object obj = dao.save("${objectName}Mapper.add", record);
 			result = obj == null? 0:(int)obj;
 		<#else>
-			result = ${prefixName}Mapper.save(record);
+			result = ${prefixName}Mapper.add(record);
 		</#if>
 		}catch(Exception e){
 			log.error("新增发生异常", e);

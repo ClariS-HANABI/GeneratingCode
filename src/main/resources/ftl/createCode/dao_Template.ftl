@@ -10,7 +10,7 @@ import ${packagePath}.pojo.${objectName};
 @Mapper
 public interface ${objectName}Mapper{
 
-    int save(${paramsType} record);
+    int add(${paramsType} record);
 
     int delete(${paramsType} record);
 

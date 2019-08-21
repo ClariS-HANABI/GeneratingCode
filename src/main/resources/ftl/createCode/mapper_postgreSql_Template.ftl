@@ -43,7 +43,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="save" parameterType="${entityName}">
+	<insert id="add" parameterType="${entityName}">
 		insert into ${tableName}(
 		<#list fieldList as var>
 			<if test="${var[0]} != null">
@@ -128,7 +128,7 @@
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} !=null and ${var[0]} !=''" >
+			<if test="${var[0]} != null and ${var[0]} != ''" >
 				and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
 			</if>
 		</#list>
@@ -143,7 +143,7 @@
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} !=null and ${var[0]} !=''" >
+			<if test="${var[0]} != null and ${var[0]} != ''" >
 				and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
 			</if>
 		</#list>
@@ -158,7 +158,7 @@
 		from ${tableName} a
 		<where>
 			<#list fieldList as var>
-				<if test="${var[0]} !=null and ${var[0]} !=''" >
+				<if test="${var[0]} != null and ${var[0]} != ''" >
 					and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
 				</if>
 			</#list>

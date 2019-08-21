@@ -154,14 +154,14 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
     */
     @RequestMapping(value="/sud",method=RequestMethod.POST)
     @ResponseBody
-    public Object save(<#if entityType == 1>${objectName} ${prefixName}</#if>){
+    public Object add(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
 	<#else>
 		Map<String, Object> map = null;
 	</#if>
 		try{
-			int result = ${prefixName}Service.save(<#if entityType == 1>${prefixName}<#else>pd</#if>);
+			int result = ${prefixName}Service.add(<#if entityType == 1>${prefixName}<#else>pd</#if>);
 			if(result != 0){
 			<#if entityType == 1>
 				map = Tools.setResult(200, "添加成功");
