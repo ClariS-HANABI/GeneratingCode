@@ -33,7 +33,7 @@ public class ${objectName}Service{
 	/**
 	* 新增
 	*/
-	public int add(${paramsType} record){
+	public Boolean add(${paramsType} record){
 		int result = 0;
 		try{
 		<#if daoType != 1>
@@ -45,13 +45,13 @@ public class ${objectName}Service{
 		}catch(Exception e){
 			log.error("新增发生异常", e);
 		}
-		return result;
+		return result > 0;
 	}
 
 	/**
 	* 删除
 	*/
-	public int delete(<#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>){
+	public Boolean delete(<#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>){
 	    ${paramsType} record = new ${paramsType}();
 		int result = 0;
 		try{
@@ -69,13 +69,13 @@ public class ${objectName}Service{
 		}catch(Exception e){
 			log.error("删除发生异常", e);
 		}
-		return result;
+		return result > 0;
 	}
 
 	/**
 	* 修改
 	*/
-	public int edit(${paramsType} record){
+	public Boolean edit(${paramsType} record){
 		int result = 0;
 		try{
 		<#if daoType != 1>
@@ -87,7 +87,7 @@ public class ${objectName}Service{
 		}catch(Exception e){
 			log.error("修改发生异常", e);
 		}
-		return result;
+		return result > 0;
 	}
 
 	/**

@@ -161,8 +161,8 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		Map<String, Object> map = null;
 	</#if>
 		try{
-			int result = ${prefixName}Service.add(<#if entityType == 1>${prefixName}<#else>pd</#if>);
-			if(result != 0){
+			Boolean result = ${prefixName}Service.add(<#if entityType == 1>${prefixName}<#else>pd</#if>);
+			if(result){
 			<#if entityType == 1>
 				map = Tools.setResult(200, "添加成功");
 			<#else>
@@ -199,8 +199,8 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		Map<String, Object> map = null;
 	</#if>
 		try{
-			int result = ${prefixName}Service.edit(<#if entityType == 1>${prefixName}<#else>pd</#if>);
-			if(result != 0){
+			Boolean result = ${prefixName}Service.edit(<#if entityType == 1>${prefixName}<#else>pd</#if>);
+			if(result){
 			<#if entityType == 1>
 				map = Tools.setResult(200, "修改成功");
 			<#else>
@@ -257,8 +257,8 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		}
 	</#if>
 		try{
-			int result = ${prefixName}Service.delete(id);
-			if(result != 0){
+			Boolean result = ${prefixName}Service.delete(id);
+			if(result){
 			<#if entityType == 1>
 				map = Tools.setResult(200, "删除成功");
 			<#else>
