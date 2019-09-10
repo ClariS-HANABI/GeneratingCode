@@ -28,14 +28,14 @@
 	</resultMap>
 	</#if>
 
-	<sql id="Column_List">
+	<sql id="ColumnList">
 	<#list fieldList as var>
 		a.${var[5]} as "${var[0]}",
 	</#list>
 		a.${keyFiled.name} as "${keyFiled.filed}"
 	</sql>
 
-	<sql id="Base_Column_List">
+	<sql id="BaseColumnList">
 	<#list fieldList as var>
 		a.${var[5]},
 	</#list>
@@ -115,7 +115,7 @@
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'Base_Column_List'<#else>'Column_List'</#if> />
+		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a
 		where a.${keyFiled.name} = ${r"#{"}${keyFiled.filed}${r"}"}
 	</select>
@@ -124,12 +124,12 @@
 	<!-- 根据条件获取单个数据 -->
 	<select id="findByInfo" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'Base_Column_List'<#else>'Column_List'</#if> />
+		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
 			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
+				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
 			</if>
 		</#list>
 		</where>
@@ -139,12 +139,12 @@
 	<!-- 列表 -->
 	<select id="listAll" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'Base_Column_List'<#else>'Column_List'</#if> />
+		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
 			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
+				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
 			</if>
 		</#list>
 		</where>
@@ -154,12 +154,12 @@
 	<!-- 根据参数列表查询 -->
 	<select id="getListByMap" parameterType="${entityClass}" resultType="${entityClass}">
 		select
-		<include refid="Column_List" />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
 			<#list fieldList as var>
 				<if test="${var[0]} != null and ${var[0]} != ''" >
-					and a.${var[5]}= ${r"#{"}${var[0]}${r"}"}
+					and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
 				</if>
 			</#list>
 		</where>
