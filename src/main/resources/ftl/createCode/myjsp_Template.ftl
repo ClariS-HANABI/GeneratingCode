@@ -432,7 +432,7 @@
         }
         //2、保存
         $.ajax({
-            url: "${prefixName}/sud",
+            url: "${prefixName}/info",
             type: "POST",
             data: $("#${prefixName}AddModal form").serialize(),
             dataType: "json",
@@ -493,7 +493,7 @@
         //2、更新
         $.ajax({
             type: "PUT",
-            url: "${prefixName}/sud",
+            url: "${prefixName}/info",
             data: $("#${prefixName}UpdateModal form").serialize(),
             dataType: "json",
             success: function(result){
@@ -526,10 +526,7 @@
                 //确认，发送ajax请求删除即可
                 $.ajax({
                     type: "DELETE",
-                    url: "${prefixName}/sud",
-                    data: {
-                        id: id
-                    },
+                    url: "${prefixName}/info/" + id,
                     dataType: "json",
                     success: function(result){
                         var btnClassName = "";
