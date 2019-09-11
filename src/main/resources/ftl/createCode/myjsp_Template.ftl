@@ -470,10 +470,7 @@
     function getData(id){
         $.ajax({
             type: "GET",
-            url: "${prefixName}/id",
-            data: {
-                id: id
-            },
+            url: "${prefixName}/info/" + id,
             dataType: "json",
             success: function(result){
                 if(result.code == 200){

@@ -36,45 +36,35 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	}
 
 	/**
-	* 根据id查询数据
+	* 查询详情
+	* @param id
+	* @return
 	*/
-	@RequestMapping(value = "/id", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public Object getById(<#if entityType == 1><#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if></#if>){
-	<#if entityType == 1>
-		<#if keyFiled.type == 'int'>
+	public Object getById(@PathVariable <#if keyFiled.type == 'int'>Integer<#elseif keyFiled.type == 'bigint'>Long<#else>String</#if> id){
+	<#if keyFiled.type == 'int'>
 		if(id == null || id.intValue() <= 0){
-			return null;
-		}
-		<#elseif keyFiled.type == 'bigint'>
+	<#elseif keyFiled.type == 'bigint'>
 		if(id == null || id.longValue() <= 0){
-			return null;
-		}
-		<#else>
+	<#else>
 		if(Tools.isEmpty(id)){
-			return null;
+	</#if>
+			return Tools.setResult(203, "id为空");
 		}
-		</#if>
-		Map<String, Object> map = null;
+	<#if entityType == 1>
+		Map<String, Object> result = Tools.setResult(200, "查询成功");
 		try {
 			${objectName} ${objectNameLower} = ${prefixName}Service.findById(id);
-			map = Tools.setResult(200, "查询成功");
-			map.put("${objectNameLower}", ${objectNameLower});
+			result.put("${objectNameLower}", ${objectNameLower});
 		} catch (Exception e){
-			map = Tools.setResult(500, "查询发生异常");
+			result = Tools.setResult(500, "查询发生异常");
 			log.error("根据id查询数据发生异常", e);
 		}
-		return map;
+		return result;
     <#else>
         PageData pd = this.getPageData();
         try{
-		<#if keyFiled.type == 'int'>
-			Integer id = pd.getInt("id");
-		<#elseif keyFiled.type == 'bigint'>
-			Long id = Long.valueOf(pd.getString("id"));
-		<#else>
-			String id = pd.getString("id");
-		</#if>
 			PageData result = ${prefixName}Service.findById(id);
 			pd.setResult(200, "查询成功").put("${objectNameLower}", result);
         } catch(Exception e){
@@ -128,49 +118,43 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
 	<#else>
-		Map<String, Object> map = null;
+		Map<String, Object> result = Tools.setResult(200, "查询列表成功");
 	</#if>
 		try{
 			List<${paramsType}> list = ${prefixName}Service.listAll(<#if entityType == 1>${prefixName}<#else>pd</#if>);
 		<#if entityType == 1>
-			map = Tools.setResult(200, "查询列表成功");
-			map.put("list", list);
+			result.put("list", list);
 		<#else>
 			pd.setResult(200, "查询列表成功").pd.put("list", list);
 		</#if>
 		} catch(Exception e){
 			log.error("查询列表发生异常", e);
 		<#if entityType == 1>
-			map = Tools.setResult(500, "查询列表发生异常");
+			result = Tools.setResult(500, "查询列表发生异常");
 		<#else>
 			pd.setResult(500, "查询列表发生异常");
 		</#if>
 		}
-		return <#if entityType == 1>map<#else>pd</#if>;
+		return <#if entityType == 1>result<#else>pd</#if>;
 	}
 
     /**
     * 添加
     */
-    @RequestMapping(value="/sud",method=RequestMethod.POST)
+    @RequestMapping(value="/info",method=RequestMethod.POST)
     @ResponseBody
     public Object add(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
+		pd.setResult(200, "添加成功");
 	<#else>
-		Map<String, Object> map = null;
+		Map<String, Object> result = Tools.setResult(200, "添加成功");
 	</#if>
 		try{
-			Boolean result = ${prefixName}Service.add(<#if entityType == 1>${prefixName}<#else>pd</#if>);
-			if(result){
+			Boolean isOk = ${prefixName}Service.add(<#if entityType == 1>${prefixName}<#else>pd</#if>);
+			if(!isOk){
 			<#if entityType == 1>
-				map = Tools.setResult(200, "添加成功");
-			<#else>
-				pd.setResult(200, "添加成功");
-			</#if>
-			}else{
-			<#if entityType == 1>
-				map = Tools.setResult(206, "添加失败");
+				result = Tools.setResult(206, "添加失败");
 			<#else>
 				pd.setResult(206, "添加失败");
 			</#if>
@@ -178,37 +162,32 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
         }catch(Exception e){
 			log.error("新增发生异常", e);
 		<#if entityType == 1>
-			map = Tools.setResult(500, "新增发生异常");
+			result = Tools.setResult(500, "新增发生异常");
 		<#else>
 			pd.setResult(500, "新增发生异常");
 		</#if>
         }
-        return <#if entityType == 1>map<#else>pd</#if>;
+        return <#if entityType == 1>result<#else>pd</#if>;
 	}
 
 
 	/**
 	* 更新
 	*/
-	@RequestMapping(value="/sud",method=RequestMethod.PUT)
+	@RequestMapping(value="/info",method=RequestMethod.PUT)
 	@ResponseBody
 	public Object update(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
+		pd.setResult(200, "修改成功");
 	<#else>
-		Map<String, Object> map = null;
+		Map<String, Object> result = Tools.setResult(200, "修改成功");
 	</#if>
 		try{
-			Boolean result = ${prefixName}Service.edit(<#if entityType == 1>${prefixName}<#else>pd</#if>);
-			if(result){
+			Boolean isOk = ${prefixName}Service.edit(<#if entityType == 1>${prefixName}<#else>pd</#if>);
+			if(!isOk){
 			<#if entityType == 1>
-				map = Tools.setResult(200, "修改成功");
-			<#else>
-				pd.setResult(200, "修改成功");
-			</#if>
-			}else{
-			<#if entityType == 1>
-				map = Tools.setResult(206, "修改失败");
+				result = Tools.setResult(206, "修改失败");
 			<#else>
 				pd.setResult(206, "修改失败");
 			</#if>
@@ -216,57 +195,41 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		}catch(Exception e){
 			log.error("修改发生异常", e);
 		<#if entityType == 1>
-			map = Tools.setResult(500, "修改发生异常");
+			result = Tools.setResult(500, "修改发生异常");
 		<#else>
 			pd.setResult(500, "修改发生异常");
 		</#if>
 		}
-		return <#if entityType == 1>map<#else>pd</#if>;
+		return <#if entityType == 1>result<#else>pd</#if>;
 	}
 
 
 	/**
 	* 删除
 	*/
-	@RequestMapping(value="/sud",method=RequestMethod.DELETE)
+	@RequestMapping(value="/info/{id}",method=RequestMethod.DELETE)
     @ResponseBody
-	public Object delete(<#if entityType == 1><#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if></#if>){
+	public Object delete(@PathVariable <#if keyFiled.type == 'int'>Integer<#elseif keyFiled.type == 'bigint'>Long<#else>String</#if> id){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
-		<#if keyFiled.type == 'int'>
-		Integer id = pd.getInt("id");
-		<#elseif keyFiled.type == 'bigint'>
-		Long id = Long.valueOf(pd.getString("id"));
-		<#else>
-		String id = pd.getString("id");
-		</#if>
+		pd.setResult(200, "删除成功");
 	<#else>
-		Map<String, Object> map = null;
+		Map<String, Object> result = Tools.setResult(200, "删除成功");
 	</#if>
 	<#if keyFiled.type == 'int'>
 		if(id == null || id.intValue() <= 0){
-			return null;
-		}
 	<#elseif keyFiled.type == 'bigint'>
 		if(id == null || id.longValue() <= 0){
-			return null;
-		}
 	<#else>
 		if(Tools.isEmpty(id)){
-			return null;
-		}
 	</#if>
+			return Tools.setResult(203, "id为空");
+		}
 		try{
-			Boolean result = ${prefixName}Service.delete(id);
-			if(result){
+			Boolean isOk = ${prefixName}Service.delete(id);
+			if(!isOk){
 			<#if entityType == 1>
-				map = Tools.setResult(200, "删除成功");
-			<#else>
-				pd.setResult(200, "删除成功");
-			</#if>
-			}else{
-			<#if entityType == 1>
-				map = Tools.setResult(206, "删除失败");
+				result = Tools.setResult(206, "删除失败");
 			<#else>
 				pd.setResult(206, "删除失败");
 			</#if>
@@ -274,12 +237,12 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		} catch(Exception e){
 			log.error("删除发生异常", e);
 		<#if entityType == 1>
-			map = Tools.setResult(500, "删除发生异常");
+			result = Tools.setResult(500, "删除发生异常");
 		<#else>
 			pd.setResult(500, "删除发生异常");
 		</#if>
 		}
-		return <#if entityType == 1>map<#else>pd</#if>;
+		return <#if entityType == 1>result<#else>pd</#if>;
 	}
 
 
