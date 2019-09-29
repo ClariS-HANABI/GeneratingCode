@@ -103,8 +103,9 @@ public class ProductCodeTool {
         //当前日期
         params.put("nowDate", new Date());
         //paramsType和result的类型
-        params.put("entityName", entityType == 1 ? packagePath + ".pojo." + objectName : "pd");
-        params.put("result", entityType == 1 ? "resultMap=\"BaseResultMap\"" : "resultType=\"pd\"");
+        String pojoName = packagePath + ".pojo." + objectName;
+        params.put("entityName", entityType == 1 ? pojoName : "pd");
+        params.put("result", "resultType" + (entityType == 1 ? "\"" + pojoName + "\"" : "\"pd\""));
         params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
         params.put("paramsType", entityType == 1 ? objectName : "PageData");
     }

@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace=<#if entityType == 1>"${packagePath}.dao.${objectName}Mapper"<#else>"${objectName}Mapper"</#if>>
-	<#if entityType == 1>
-	<resultMap id="BaseResultMap" type="${entityName}">
-			<#if keyFiled.type == 'int'>
-		<id column="${keyFiled.name}" jdbcType="INTEGER" property="${keyFiled.filed}" />
-			<#elseif keyFiled.type == 'bigint'>
-		<id column="${keyFiled.name}" jdbcType="BIGINT" property="${keyFiled.filed}" />
-			<#else>
-		<id column="${keyFiled.name}" jdbcType="VARCHAR" property="${keyFiled.filed}" />
-			</#if>
-		<#list fieldList as var>
-			<#if var[1] == 'int'>
-		<id column="${var[5]}" jdbcType="INTEGER" property="${var[0]}" />
-			<#elseif var[1] == 'bigint'>
-		<id column="${var[5]}" jdbcType="BIGINT" property="${var[0]}" />
-			<#elseif var[1] == 'varchar' || var[1] == 'char' || var[1] == 'text' >
-		<id column="${var[5]}" jdbcType="VARCHAR" property="${var[0]}" />
-			<#elseif var[1] == 'decimal' || var[1] == 'double' || var[1] == 'float'>
-		<id column="${var[5]}" jdbcType="DOUBLE" property="${var[0]}" />
-			<#elseif var[1] == 'date' || var[1] == 'timestamp'>
-		<id column="${var[5]}" jdbcType="DATE" property="${var[0]}" />
-			<#else>
-		<id column="${var[5]}" jdbcType="${var[1]?upper_case}" property="${var[0]}" />
-			</#if>
-		</#list>
-	</resultMap>
-	</#if>
 
 	<sql id="ColumnList">
 		<#list fieldList as var>
