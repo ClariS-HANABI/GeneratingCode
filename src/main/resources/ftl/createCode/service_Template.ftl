@@ -94,7 +94,7 @@ public class ${objectName}Service{
 	* 批量新增
 	*/
 	@Transactional(rollbackFor = Exception.class)
-	public int saveList(List<${paramsType}> list){
+	public int saveList(List<${paramsType}> list) throws Exception{
 		int result = 0;
     <#if entityType == 1>
         Map<String, Object> map = new HashMap<>(10);
@@ -116,7 +116,7 @@ public class ${objectName}Service{
 	* 批量删除
 	*/
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAll(String[] array){
+	public int deleteAll(String[] array) throws Exception{
 		int result = 0;
     <#if entityType == 1>
         Map<String, Object> map = new HashMap<>(10);
