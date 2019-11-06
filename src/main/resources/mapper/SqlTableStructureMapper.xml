@@ -16,13 +16,13 @@
     <!-- 根据表名获取表结构  MySql -->
     <select id="getMySqlStructureByName" parameterType="pd" resultType="pd">
         select
-            column_name,
-            data_type,
+            column_name as column_name,
+            data_type as data_type,
             character_maximum_length as type_length,
-            column_type,
-            is_nullable,
-            column_key,
-            column_comment
+            column_type as column_type,
+            is_nullable as is_nullable,
+            column_key as column_key,
+            column_comment as column_comment
         from information_schema.columns
         where table_schema = #{databaseName} and table_name = #{tableName}
     </select>
