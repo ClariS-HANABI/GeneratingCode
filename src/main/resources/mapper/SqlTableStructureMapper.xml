@@ -5,7 +5,7 @@
 
     <!-- 查询数据库的所有表  MySql -->
     <select id="getMySqlAllTable" parameterType="pd" resultType="pd">
-        select * from information_schema.tables where table_schema = #{databaseName} and table_type = 'BASE TABLE'
+        select *, TABLE_NAME as table_name from information_schema.tables where table_schema = #{databaseName} and table_type = 'BASE TABLE'
     </select>
 
     <!-- 查询数据库的所有表  PostgreSql -->
