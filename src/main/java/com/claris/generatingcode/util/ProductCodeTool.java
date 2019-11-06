@@ -105,7 +105,7 @@ public class ProductCodeTool {
         //paramsType和result的类型
         String pojoName = packagePath + ".pojo." + objectName;
         params.put("entityName", entityType == 1 ? pojoName : "pd");
-        params.put("result", "resultType" + (entityType == 1 ? "\"" + pojoName + "\"" : "\"pd\""));
+        params.put("result", "resultType=" + (entityType == 1 ? "\"" + pojoName + "\"" : "\"pd\""));
         params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
         params.put("paramsType", entityType == 1 ? objectName : "PageData");
     }
