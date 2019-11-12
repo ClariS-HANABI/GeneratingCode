@@ -16,8 +16,8 @@ public class Tools {
      * @param value
      * @return false为大于0
      */
-    public static Boolean valueIsNull(Long value) {
-        return value == null || isEmpty(value.toString()) || value.longValue() < 1;
+    public static Boolean numberIsNull(Long value) {
+        return isEmpty(value) || value.longValue() < 1;
     }
 
     /**
@@ -26,20 +26,29 @@ public class Tools {
      * @param value
      * @return false为大于0
      */
-    public static Boolean valueIsNull(Integer value) {
-        return value == null || isEmpty(value.toString()) || value.intValue() < 1;
+    public static Boolean numberIsNull(Integer value) {
+        return isEmpty(value) || value.intValue() < 1;
     }
 
 
     /**
-     * 判断对象是否为空
+     * 判断Long对象是否不为null并且大于0
      *
-     * @param obj
-     * @param <T>
-     * @return false为不为空
+     * @param value
+     * @return true为大于0
      */
-    public static <T> Boolean objIsNull(T obj) {
-        return obj == null || isEmpty(obj.toString());
+    public static Boolean numberNotNull(Long value) {
+        return notEmpty(value) && value.longValue() > 0;
+    }
+
+    /**
+     * 判断Integer对象是否不为null并且大于0
+     *
+     * @param value
+     * @return true为大于0
+     */
+    public static Boolean numberNotNull(Integer value) {
+        return notEmpty(value) && value.intValue() > 0;
     }
 
 
@@ -50,10 +59,9 @@ public class Tools {
      * @param <T>
      * @return false为不为空
      */
-    public static <T> Boolean arrayIsNull(T[] array) {
-        return array == null || isEmpty(array.toString()) || array.length == 0;
+    public static <T> Boolean isNull(T[] array) {
+        return isEmpty(array) || array.length == 0;
     }
-
 
     /**
      * 判断集合是否为空
@@ -62,10 +70,9 @@ public class Tools {
      * @param <T>
      * @return false为不为空
      */
-    public static <T extends Collection> Boolean collectionIsNull(T collection) {
-        return collection == null || isEmpty(collection.toString()) || collection.size() == 0;
+    public static <T extends Collection> Boolean isNull(T collection) {
+        return isEmpty(collection) || collection.size() == 0;
     }
-
 
     /**
      * 判断Map是否为空
@@ -74,8 +81,42 @@ public class Tools {
      * @param <T>
      * @return false为不为空
      */
-    public static <T extends Map> Boolean mapIsNull(T map) {
-        return map == null || isEmpty(map.toString()) || map.keySet() == null || map.size() == 0;
+    public static <T extends Map> Boolean isNull(T map) {
+        return isEmpty(map) || map.keySet() == null || map.size() == 0;
+    }
+
+
+    /**
+     * 判断数组是否不为空
+     *
+     * @param array
+     * @param <T>
+     * @return true不为空
+     */
+    public static <T> Boolean notNull(T[] array) {
+        return notEmpty(array) && array.length > 0;
+    }
+
+    /**
+     * 判断集合是否不为空
+     *
+     * @param collection
+     * @param <T>
+     * @return true不为空
+     */
+    public static <T extends Collection> Boolean notNull(T collection) {
+        return notEmpty(collection) && collection.size() > 0;
+    }
+
+    /**
+     * 判断Map是否不为空
+     *
+     * @param map
+     * @param <T>
+     * @return true不为空
+     */
+    public static <T extends Map> Boolean notNull(T map) {
+        return notEmpty(map) && notEmpty(map.keySet()) && map.size() > 0;
     }
 
 
@@ -87,7 +128,7 @@ public class Tools {
      * @return
      */
     public static <T> T typeCast(Object obj) {
-        return obj == null || isEmpty(obj.toString()) ? null : (T) obj;
+        return isEmpty(obj) ? null : (T) obj;
     }
 
     /**
@@ -174,15 +215,15 @@ public class Tools {
 
     /**
      * 检测对象不为空
+     *
      * @param obj
      * @return
      */
     public static boolean notEmpty(Object obj) {
-        if(obj == null){
+        if (obj == null) {
             return false;
         }
-        String s = obj.toString();
-        return s != null && !"".equals(s) && !"''".equals(s) && !"\"\"".equals(s) && !"null".equals(s);
+        return notEmpty(obj.toString());
     }
 
     /**
@@ -197,16 +238,17 @@ public class Tools {
 
     /**
      * 检测对象是否为空
+     *
      * @param obj
      * @return
      */
     public static boolean isEmpty(Object obj) {
-        if(obj == null){
+        if (obj == null) {
             return true;
         }
-        String s = obj.toString();
-        return s == null || "".equals(s) || "''".equals(s) || "\"\"".equals(s) || "null".equals(s);
+        return isEmpty(obj.toString());
     }
+
 
     /**
      * 检测字符串是否为空(null,"","null",whitespace)

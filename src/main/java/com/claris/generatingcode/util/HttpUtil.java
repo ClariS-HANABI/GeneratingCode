@@ -112,7 +112,7 @@ public class HttpUtil {
         // 设置通用的请求属性
         connection.setRequestProperty("Connection", "Keep-Alive");
         //循环设置请求头属性
-        if(!Tools.mapIsNull(heardParam)){
+        if(!Tools.isNull(heardParam)){
             for(String key : heardParam.keySet()){
                 connection.setRequestProperty(key, heardParam.get(key));
             }
