@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace=<#if entityType == 1>"${packagePath}.dao.${objectName}Mapper"<#else>"${objectName}Mapper"</#if>>
+<mapper namespace=<#if entityType == 1>"${packagePath}.${daoPath}.${objectName}Mapper"<#else>"${objectName}Mapper"</#if>>
 
 	<sql id="ColumnList">
 		<#list fieldList as var>
@@ -76,7 +76,7 @@
 
 
 	<!-- 删除 -->
-	<delete id="delete" parameterType="${entityName}">
+	<delete id="delete" parameterType="<#if keyFiled.type == 'int'>java.lang.Integer<#elseif keyFiled.type == 'bigint'>java.lang.Long<#else>java.lang.String</#if>">
 		delete from ${tableName}
 		where ${keyFiled.name} = ${r"#{"}${keyFiled.filed}${r"}"}
 	</delete>
@@ -107,7 +107,7 @@
 	
 	
 	<!-- 通过ID获取数据 -->
-	<select id="findById" parameterType="${entityName}" ${result}>
+	<select id="findById" parameterType="<#if keyFiled.type == 'int'>java.lang.Integer<#elseif keyFiled.type == 'bigint'>java.lang.Long<#else>java.lang.String</#if>" ${result}>
 		select
 		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a

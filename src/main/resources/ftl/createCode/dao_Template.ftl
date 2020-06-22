@@ -2,9 +2,9 @@ package ${packagePath}.dao;
 
 import java.util.*;
 import org.apache.ibatis.annotations.Mapper;
-import ${packagePath}.util.*;
+import org.apache.ibatis.annotations.Param;
 <#if entityType == 1>
-import ${packagePath}.pojo.${objectName};
+import ${packagePath}.${entityPath}.${objectName};
 </#if>
 
 @Mapper
@@ -12,7 +12,7 @@ public interface ${objectName}Mapper{
 
     int add(${paramsType} record);
 
-    int delete(${paramsType} record);
+    int delete(@Param("id") <#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>);
 
     int edit(${paramsType} record);
 
@@ -20,7 +20,7 @@ public interface ${objectName}Mapper{
 
     int deleteAll(<#if entityType == 1>Map<String, Object><#else>PageData</#if> params);
 
-    ${paramsType} findById(${paramsType} param);
+    ${paramsType} findById(@Param("id") <#if keyFiled.type == 'int'>Integer id<#elseif keyFiled.type == 'bigint'>Long id<#else>String id</#if>);
 
     ${paramsType} findByInfo(${paramsType} param);
 

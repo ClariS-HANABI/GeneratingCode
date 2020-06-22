@@ -30,84 +30,78 @@ public class ProductCodeTool {
     /**
      * 根据类名和配置参数生成代码
      *
-     * @param objectName 类名
-     * @param prefixName 前缀名称
-     * @param params     配置参数集合
-     * @param entityType 实体类类型
-     * @param daoType    dao类型
-     * @param addPackage 是否在生成时加上层路径
+     * @param params 配置参数集合
+     * @param info   生成参数封装
      * @throws Exception
      */
-    public static void printFileByObject(String objectName, String prefixName, Map<String, Object> params,
-                                         Integer entityType, Integer daoType, boolean addPackage) throws Exception {
+    public static void printFileByObject(Map<String, Object> params, SettingInfo info) throws Exception {
         //存放路径
         String filePath = "ftl/code/";
         //ftl路径
         String ftlPath = "createCode";
         //如果是实体类，生成entity
-        if (entityType == 1) {
-            Freemarker.printFile("pojo_Template.ftl", params, (addPackage ? "/pojo/" : "")
-                    + objectName + ".java", filePath, ftlPath);
+        if (info.getEntityType() == 1) {
+            Freemarker.printFile("pojo_Template.ftl", params, (info.isAddPackage() ? "/" + info.getEntityPath() + "/" : "")
+                    + info.getObjectName() + ".java", filePath, ftlPath);
         }
         //如果是普通DAO，生成DAO
-        if (daoType == 1) {
-            Freemarker.printFile("dao_Template.ftl", params, (addPackage ? "/dao/" : "")
-                    + objectName + "Mapper.java", filePath, ftlPath);
+        if (info.getDaoType() == 1) {
+            Freemarker.printFile("dao_Template.ftl", params, (info.isAddPackage() ? "/"+ info.getDaoPath() + "/" : "")
+                    + info.getObjectName() + "Mapper.java", filePath, ftlPath);
         }
         //生成controller
-        Freemarker.printFile("my_controller_Template.ftl", params, (addPackage ? "/controller/" : "")
-                + objectName + "Controller.java", filePath, ftlPath);
-        //生成service
-        Freemarker.printFile("service_Template.ftl", params, (addPackage ? "/service/" : "")
-                + objectName + "Service.java", filePath, ftlPath);
+        Freemarker.printFile("my_controller_Template.ftl", params, (info.isAddPackage() ? "/controller/" : "")
+                + info.getObjectName() + "Controller.java", filePath, ftlPath);
+        //生成service和impl
+        Freemarker.printFile("service_Template.ftl", params, "/service/" + info.getObjectName()
+                + "Service.java", filePath, ftlPath);
+        Freemarker.printFile("service_impl_Template.ftl", params, "/service/impl/" + info.getObjectName()
+                + "ServiceImpl.java", filePath, ftlPath);
         //生成mybatis xml
-        Freemarker.printFile("mapper_mySql_Template.ftl", params, "mapper/mySql/" + objectName + "Mapper.xml", filePath, ftlPath);
-        Freemarker.printFile("mapper_postgreSql_Template.ftl", params, "mapper/postgreSql/" + objectName + "Mapper.xml", filePath, ftlPath);
+        Freemarker.printFile("mapper_mySql_Template.ftl", params, "mapper/mySql/" + info.getObjectName()
+                + "Mapper.xml", filePath, ftlPath);
+        Freemarker.printFile("mapper_postgreSql_Template.ftl", params, "mapper/postgreSql/" + info.getObjectName()
+                + "Mapper.xml", filePath, ftlPath);
         //生成SQL脚本
-        Freemarker.printFile("mysql_sql_Template.ftl", params, "sql/mySql/" + prefixName + ".sql", filePath, ftlPath);
-        Freemarker.printFile("postgreSql_sql_Template.ftl", params, "sql/postgreSql/" + prefixName + ".sql", filePath, ftlPath);
+        Freemarker.printFile("mysql_sql_Template.ftl", params, "sql/mySql/" + info.getPrefixName() + ".sql", filePath, ftlPath);
+        Freemarker.printFile("postgreSql_sql_Template.ftl", params, "sql/postgreSql/" + info.getPrefixName()
+                + ".sql", filePath, ftlPath);
         //生成jsp页面
-        Freemarker.printFile("myjsp_Template.ftl", params, (addPackage ? "/view/" : "") + prefixName + "View.jsp", filePath, ftlPath);
+        Freemarker.printFile("myjsp_Template.ftl", params, (info.isAddPackage() ? "/view/" : "")
+                + info.getPrefixName() + "View.jsp", filePath, ftlPath);
     }
 
     /**
      * 设置生成参数
      *
-     * @param params      参数集合
-     * @param fieldList   字段属性集合
-     * @param zindex      字段数量
-     * @param packagePath 包路径
-     * @param objectName  类名
-     * @param tableName   表名
-     * @param prefixName  前缀名称
-     * @param entityType  实体类类型
+     * @param params 参数集合
+     * @param info   生成参数封装
      */
-    public static void setParamsInfo(Map<String, Object> params, List<String[]> fieldList, Integer zindex, String packagePath,
-                                     String objectName, String tableName, String prefixName, Integer entityType) {
+    public static void setParamsInfo(Map<String, Object> params, SettingInfo info) {
         //字段属性集合
-        params.put("fieldList", fieldList);
+        params.put("fieldList", info.getFieldList());
         //字段数量
-        params.put("zindex", zindex);
+        params.put("zindex", info.getZindex());
         //包路径
-        params.put("packagePath", packagePath);
+        params.put("packagePath", info.getPackagePath());
         //类名
-        params.put("objectName", objectName);
+        params.put("objectName", info.getObjectName());
         //表名称
-        params.put("tableName", tableName);
+        params.put("tableName", info.getTableName());
         //类名(全小写)
-        params.put("objectNameLower", objectName.toLowerCase());
+        params.put("objectNameLower", info.getObjectName().toLowerCase());
         //类名(全大写)
-        params.put("objectNameUpper", objectName.toUpperCase());
+        params.put("objectNameUpper", info.getObjectName().toUpperCase());
         //mapper、service之类的名称前缀
-        params.put("prefixName", prefixName);
+        params.put("prefixName", info.getPrefixName());
         //当前日期
         params.put("nowDate", new Date());
         //paramsType和result的类型
-        String pojoName = packagePath + ".pojo." + objectName;
-        params.put("entityName", entityType == 1 ? pojoName : "pd");
-        params.put("result", "resultType=" + (entityType == 1 ? "\"" + pojoName + "\"" : "\"pd\""));
-        params.put("entityClass", entityType == 1 ? "java.util.Map" : "pd");
-        params.put("paramsType", entityType == 1 ? objectName : "PageData");
+        String pojoName = info.getPackagePath() + "." + info.getEntityPath() + "." + info.getObjectName();
+        params.put("entityName", info.getEntityType() == 1 ? pojoName : "pd");
+        params.put("result", "resultType=" + (info.getEntityType() == 1 ? "\"" + pojoName + "\"" : "\"pd\""));
+        params.put("entityClass", info.getEntityType() == 1 ? "java.util.Map" : "pd");
+        params.put("paramsType", info.getEntityType() == 1 ? info.getObjectName() : "PageData");
     }
 
     /**

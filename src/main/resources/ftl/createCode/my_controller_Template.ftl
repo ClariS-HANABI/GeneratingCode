@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ${packagePath}.controller.BaseController;
+<#if entityType != 1>import ${packagePath}.controller.BaseController;</#if>
 import com.github.pagehelper.*;
 import javax.servlet.http.*;
 import lombok.extern.log4j.*;
-import ${packagePath}.util.*;
 import ${packagePath}.service.${objectName}Service;
 <#if entityType == 1>
-import ${packagePath}.pojo.${objectName};
+import ${packagePath}.${entityPath}.${objectName};
 </#if>
 
 /**

@@ -149,6 +149,9 @@
 					<td style="width: 600px;">
 						<input type="radio" name="entityType" value="2" checked="checked"/>PageData
 						<input type="radio" name="entityType" value="1" style="margin-left: 20px;"/>对象实体类
+						<span style="margin-left: 30px;">包名：</span>
+						<input type="text" name="entityPath" id="entityPath" placeholder="不填默认为entity"
+								  style="width:150px;padding-left: 10px;margin-bottom: 0px;" title="包名" class="form-control"/>
 					</td>
 					<td rowspan="2" style="width: 10%;">
 						<a class="btn btn-app btn-success btn-mini" onclick="commit();" id="productc"><i class="icon-print"></i>生成</a>
@@ -159,6 +162,9 @@
 					<td>
 						<input type="radio" name="daoType" value="2" checked="checked"/>公用DAO
 						<input type="radio" name="daoType" value="1" style="margin-left: 20px;"/>普通DAO
+						<span style="margin-left: 30px;">包名：</span>
+						<input type="text" name="daoPath" id="daoPath" placeholder="不填默认为dao"
+								  style="width:150px;padding-left: 10px;margin-bottom: 0px;" title="包名" class="form-control"/>
 					</td>
 					<td style="width:7%;text-align: right;font-weight: bold;">实体类来源：</td>
 					<td>

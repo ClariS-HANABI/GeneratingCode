@@ -1,16 +1,13 @@
-package ${packagePath}.pojo;
+package ${packagePath}.${entityPath};
 
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.alibaba.fastjson.annotation.JSONField;
 import java.util.*;
 
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @Accessors(chain = true)
-@EqualsAndHashCode
 public class ${objectName}{
 
 <#if keyFiled.type == 'int'>

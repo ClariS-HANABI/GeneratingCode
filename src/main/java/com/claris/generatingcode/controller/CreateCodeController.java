@@ -96,9 +96,15 @@ public class CreateCodeController extends BaseController {
             //获取dao类型
             Integer daoType = pd.getInt("daoType");
             params.put("daoType", daoType);
+            //dao包名
+            String daoPath = Tools.isEmpty(pd.getString("daoPath")) ? "dao" : pd.getString("daoPath");
+            params.put("daoPath", daoPath);
             //获取实体类类型
             int entityType = pd.getInt("entityType");
             params.put("entityType", entityType);
+            //实体类包名
+            String entityPath = Tools.isEmpty(pd.getString("entityPath")) ? "entity" : pd.getString("entityPath");
+            params.put("entityPath", entityPath);
             //属性集合
             List<String[]> fieldList = new ArrayList<String[]>();
             for (int i = 0; i < zindex; i++) {
@@ -118,11 +124,16 @@ public class CreateCodeController extends BaseController {
             keyFiled.put("name", "id").put("filed", "id").put("mysqlType", "int(18)").put("pgsqlType", "int8").put("type", "bigint");
             params.put("keyFiled", keyFiled);
 
+            //封装参数
+            SettingInfo settingInfo = new SettingInfo().setAddPackage(false).setDaoPath(daoPath).setDaoType(daoType).setEntityPath(entityPath)
+                    .setEntityType(entityType).setFieldList(fieldList).setObjectName(objectName).setPackagePath(packagePath).setPrefixName(prefixName)
+                    .setTableName(tableName).setZindex(zindex);
+
             //设置生成参数
-            ProductCodeTool.setParamsInfo(params, fieldList, zindex, packagePath, objectName, tableName, prefixName, entityType);
+            ProductCodeTool.setParamsInfo(params, settingInfo);
 
             //生成代码
-            ProductCodeTool.printFileByObject(objectName, prefixName, params, entityType, daoType, false);
+            ProductCodeTool.printFileByObject(params, settingInfo);
 
             //生成的全部代码压缩成zip文件
             FileZip.zip(PathUtil.getClasspath() + "ftl/code", PathUtil.getClasspath() + "ftl/" + prefixName + "code.zip");
@@ -155,9 +166,15 @@ public class CreateCodeController extends BaseController {
             //获取dao类型
             Integer daoType = pd.getInt("daoType");
             params.put("daoType", daoType);
+            //dao包名
+            String daoPath = Tools.isEmpty(pd.getString("daoPath")) ? "dao" : pd.getString("daoPath");
+            params.put("daoPath", daoPath);
             //获取实体类类型
-            Integer entityType = pd.getInt("entityType");
+            int entityType = pd.getInt("entityType");
             params.put("entityType", entityType);
+            //实体类包名
+            String entityPath = Tools.isEmpty(pd.getString("entityPath")) ? "entity" : pd.getString("entityPath");
+            params.put("entityPath", entityPath);
             //获取表名的下划线下标数组
             int[] lines = ProductCodeTool.getUnderlineIndex(tableName);
             //获取类名称
@@ -174,11 +191,16 @@ public class CreateCodeController extends BaseController {
             //设置主键信息
             ProductCodeTool.setKeyFiled(params, tableInfo, fieldList, tableName, sqlTableStructureService);
 
+            //封装参数
+            SettingInfo settingInfo = new SettingInfo().setAddPackage(false).setDaoPath(daoPath).setDaoType(daoType).setEntityPath(entityPath)
+                    .setEntityType(entityType).setFieldList(fieldList).setObjectName(objectName).setPackagePath(packagePath).setPrefixName(prefixName)
+                    .setTableName(tableName).setZindex(zindex);
+
             //设置生成参数
-            ProductCodeTool.setParamsInfo(params, fieldList, zindex, packagePath, objectName, tableName, prefixName, entityType);
+            ProductCodeTool.setParamsInfo(params, settingInfo);
 
             //生成代码
-            ProductCodeTool.printFileByObject(objectName, prefixName, params, entityType, daoType, false);
+            ProductCodeTool.printFileByObject(params, settingInfo);
 
             //生成的全部代码压缩成zip文件
             FileZip.zip(PathUtil.getClasspath() + "ftl/code", PathUtil.getClasspath() + "ftl/" + prefixName + "code.zip");
@@ -207,9 +229,15 @@ public class CreateCodeController extends BaseController {
             //获取dao类型
             Integer daoType = pd.getInt("daoType");
             params.put("daoType", daoType);
+            //dao包名
+            String daoPath = Tools.isEmpty(pd.getString("daoPath")) ? "dao" : pd.getString("daoPath");
+            params.put("daoPath", daoPath);
             //获取实体类类型
-            Integer entityType = pd.getInt("entityType");
+            int entityType = pd.getInt("entityType");
             params.put("entityType", entityType);
+            //实体类包名
+            String entityPath = Tools.isEmpty(pd.getString("entityPath")) ? "entity" : pd.getString("entityPath");
+            params.put("entityPath", entityPath);
             //表名集合
             String tableNames = pd.getString("objectName");
             String[] tables = tableNames.split(",");
@@ -236,11 +264,16 @@ public class CreateCodeController extends BaseController {
                     //设置主键信息
                     ProductCodeTool.setKeyFiled(params, tableInfo, fieldList, tableName, sqlTableStructureService);
 
+                    //封装参数
+                    SettingInfo settingInfo = new SettingInfo().setAddPackage(true).setDaoPath(daoPath).setDaoType(daoType).setEntityPath(entityPath)
+                            .setEntityType(entityType).setFieldList(fieldList).setObjectName(objectName).setPackagePath(packagePath)
+                            .setPrefixName(prefixName).setTableName(tableName).setZindex(zindex);
+
                     //设置生成参数
-                    ProductCodeTool.setParamsInfo(params, fieldList, zindex, packagePath, objectName, tableName, prefixName, entityType);
+                    ProductCodeTool.setParamsInfo(params, settingInfo);
 
                     //生成代码
-                    ProductCodeTool.printFileByObject(objectName, prefixName, params, entityType, daoType, true);
+                    ProductCodeTool.printFileByObject(params, settingInfo);
                 } catch (Exception e) {
                     logger.error("自动生成代码失败", e);
                     errorTables += tableName + ",";
