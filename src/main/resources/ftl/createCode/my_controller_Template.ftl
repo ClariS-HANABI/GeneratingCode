@@ -55,7 +55,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		Map<String, Object> result = Tools.setResult(200, "查询成功");
 		try {
 			${objectName} ${objectNameLower} = ${prefixName}Service.findById(id);
-			result.put("${objectNameLower}", ${objectNameLower});
+			result.put("result", ${objectNameLower});
 		} catch (Exception e){
 			result = Tools.setResult(500, "查询发生异常");
 			log.error("根据id查询数据发生异常", e);
