@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 <#if entityType != 1>import ${packagePath}.controller.BaseController;</#if>
 import com.github.pagehelper.*;
 import javax.servlet.http.*;
-import lombok.extern.log4j.*;
+import lombok.extern.slf4j.Slf4j;
 import ${packagePath}.service.${objectName}Service;
 <#if entityType == 1>
 import ${packagePath}.${entityPath}.${objectName};
@@ -17,7 +17,7 @@ import ${packagePath}.${entityPath}.${objectName};
 /**
  * 创建时间：${nowDate?string("yyyy-MM-dd")}
  */
-@Log4j
+@Slf4j
 @Controller
 @RequestMapping(value = "/${prefixName}")
 public class ${objectName}Controller<#if entityType != 1> extends BaseController </#if>{

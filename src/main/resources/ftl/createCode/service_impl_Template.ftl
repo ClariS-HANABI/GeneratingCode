@@ -4,7 +4,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.extern.log4j.*;
+import lombok.extern.slf4j.Slf4j;
 import ${packagePath}.service.${objectName}Service;
 <#if entityType == 1>
 import ${packagePath}.${entityPath}.${objectName};
@@ -15,7 +15,7 @@ import ${packagePath}.dao.DaoSupport;
 import ${packagePath}.${daoPath}.${objectName}Mapper;
 </#if>
 
-@Log4j
+@Slf4j
 @Service
 public class ${objectName}ServiceImpl implements ${objectName}Service{
 
