@@ -20,7 +20,7 @@ import ${packagePath}.${entityPath}.${objectName};
 @Slf4j
 @Controller
 @RequestMapping(value = "/${prefixName}")
-public class ${objectName}Controller<#if entityType != 1> extends BaseController </#if>{
+public class ${objectName}Controller<#if entityType != 1> extends BaseController</#if> {
 	
 	@Autowired
 	private ${objectName}Service ${prefixName}Service;

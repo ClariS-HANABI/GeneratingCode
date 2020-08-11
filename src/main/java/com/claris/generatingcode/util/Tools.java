@@ -9,46 +9,25 @@ import java.util.*;
 
 public class Tools {
 
-
     /**
-     * 判断Long对象是否为null或者小于1
+     * 判断数值对象是否为null或者小于等于0
      *
      * @param value
      * @return false为大于0
      */
-    public static Boolean numberIsNull(Long value) {
-        return isEmpty(value) || value.longValue() < 1;
-    }
-
-    /**
-     * 判断Integer对象是否为null或者小于1
-     *
-     * @param value
-     * @return false为大于0
-     */
-    public static Boolean numberIsNull(Integer value) {
-        return isEmpty(value) || value.intValue() < 1;
+    public static <T extends Number> Boolean numberIsNull(T value) {
+        return isEmpty(value) || value.longValue() <= 0;
     }
 
 
     /**
-     * 判断Long对象是否不为null并且大于0
+     * 判断数值对象是否不为null并且大于0
      *
      * @param value
      * @return true为大于0
      */
-    public static Boolean numberNotNull(Long value) {
+    public static <T extends Number> Boolean numberNotNull(T value) {
         return notEmpty(value) && value.longValue() > 0;
-    }
-
-    /**
-     * 判断Integer对象是否不为null并且大于0
-     *
-     * @param value
-     * @return true为大于0
-     */
-    public static Boolean numberNotNull(Integer value) {
-        return notEmpty(value) && value.intValue() > 0;
     }
 
 
@@ -139,8 +118,17 @@ public class Tools {
      * @param <T>    泛型名称声明（可以有多个）
      * @return
      */
-    public static <T> T typeCast(Object obj, Class<T> tClass) throws Exception {
-        return obj == null ? null : (T) obj;
+    public static <T> T typeCast(Object obj, Class<T> tClass) {
+        return isEmpty(obj) ? null : tClass.cast(obj);
+    }
+
+    /**
+     * 将对象转换为字符串
+     * @param value 转换对象
+     * @return
+     */
+    public static String toString(Object value){
+        return isEmpty(value) ? null : value.toString();
     }
 
     /**

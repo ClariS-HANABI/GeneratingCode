@@ -17,7 +17,7 @@ import ${packagePath}.${daoPath}.${objectName}Mapper;
 
 @Slf4j
 @Service
-public class ${objectName}ServiceImpl implements ${objectName}Service{
+public class ${objectName}ServiceImpl implements ${objectName}Service {
 
 <#if daoType != 1>
 	@Resource(name = "daoSupport")

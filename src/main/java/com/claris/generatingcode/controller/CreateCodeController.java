@@ -4,10 +4,8 @@ import com.claris.generatingcode.service.SqlTableStructureService;
 import com.claris.generatingcode.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -15,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
-@RequestMapping(value = "/create-code")
+@RestController
+@RequestMapping("/create-code")
 public class CreateCodeController extends BaseController {
 
     private static Logger logger = Logger.getLogger(CreateCodeController.class);
@@ -25,22 +23,11 @@ public class CreateCodeController extends BaseController {
     private SqlTableStructureService sqlTableStructureService;
 
     /**
-     * 去代码生成器页面
-     */
-    @RequestMapping(value = "/view")
-    public ModelAndView goProductCode() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("productCode");
-        return mv;
-    }
-
-    /**
      * 判断表是否存在
      *
      * @return
      */
-    @RequestMapping(value = "/isExistTable", produces = "application/json;charset=UTF-8")
-    @ResponseBody
+    @RequestMapping("/isExistTable")
     public Object isExistTable() {
         PageData pd = this.getPageData();
         try {
@@ -62,8 +49,7 @@ public class CreateCodeController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/allTable", produces = "application/json;charset=UTF-8")
-    @ResponseBody
+    @RequestMapping("/allTable")
     public Object allTable() {
         PageData pd = this.getPageData();
         try {
@@ -78,7 +64,7 @@ public class CreateCodeController extends BaseController {
     /**
      * 根据字段等配置生成代码
      */
-    @RequestMapping(value = "/proCodeOnItems")
+    @RequestMapping("/proCodeOnItems")
     public void proCodeOnItems(HttpServletResponse response) {
         PageData pd = this.getPageData();
         try {
@@ -150,7 +136,7 @@ public class CreateCodeController extends BaseController {
     /**
      * 根据表名称等配置生成代码
      */
-    @RequestMapping(value = "/proCodeOnTable")
+    @RequestMapping("/proCodeOnTable")
     public void proCodeOnTable(HttpServletResponse response) {
         PageData pd = this.getPageData();
         try {
@@ -217,7 +203,7 @@ public class CreateCodeController extends BaseController {
     /**
      * 根据选择的多表等配置生成代码
      */
-    @RequestMapping(value = "/proCodeOnAllTable")
+    @RequestMapping("/proCodeOnAllTable")
     public void proCodeOnAllTable(HttpServletResponse response) {
         PageData pd = this.getPageData();
         try {

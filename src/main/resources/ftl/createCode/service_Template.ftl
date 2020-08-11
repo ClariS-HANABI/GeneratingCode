@@ -5,7 +5,7 @@ import java.util.*;
 import ${packagePath}.${entityPath}.${objectName};
 </#if>
 
-public interface ${objectName}Service{
+public interface ${objectName}Service {
 
     Boolean add(${paramsType} record);
 

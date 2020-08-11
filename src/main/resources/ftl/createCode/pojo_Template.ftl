@@ -8,7 +8,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ${objectName}{
+public class ${objectName} {
 
 <#if keyFiled.type == 'int'>
     private Integer ${keyFiled.filed};

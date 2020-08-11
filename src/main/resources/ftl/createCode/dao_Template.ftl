@@ -8,7 +8,7 @@ import ${packagePath}.${entityPath}.${objectName};
 </#if>
 
 @Mapper
-public interface ${objectName}Mapper{
+public interface ${objectName}Mapper {
 
     int add(${paramsType} record);
 
