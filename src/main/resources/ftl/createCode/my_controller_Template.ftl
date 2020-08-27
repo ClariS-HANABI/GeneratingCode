@@ -25,6 +25,12 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	private ${objectName}Service ${prefixName}Service;
 
 
+	/*自定义接口============================================================================================= */
+
+
+
+    /* 生成自带接口========================================================================================== */
+
 	/**
 	* 查询详情
 	* @param id
