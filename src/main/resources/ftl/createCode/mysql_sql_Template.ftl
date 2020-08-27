@@ -14,7 +14,7 @@ CREATE TABLE `${tableName}` (
 	<#elseif var[1] == 'date'>
 	`${var[5]}` ${var[1]} <#if var[4] == '1'>not null </#if>COMMENT '${var[3]!''}',
 	<#elseif var[1] == 'timestamp'>
-	`${var[5]}` ${var[1]}(6) <#if var[4] == '1'>not null </#if>COMMENT '${var[3]!''}',
+	`${var[5]}` ${var[1]} <#if var[4] == '1'>not null </#if>COMMENT '${var[3]!''}',
 	<#else>
 	`${var[5]}` ${var[1]} <#if var[4] == '1'>not null </#if>COMMENT '${var[3]!''}',
 	</#if>
