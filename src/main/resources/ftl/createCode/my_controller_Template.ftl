@@ -2,7 +2,6 @@ package ${packagePath}.controller;
 
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 <#if entityType != 1>import ${packagePath}.controller.BaseController;</#if>
@@ -15,11 +14,11 @@ import ${packagePath}.${entityPath}.${objectName};
 </#if>
 
 /**
- * 创建时间：${nowDate?string("yyyy-MM-dd")}
+ * @date ${nowDate?string("yyyy-MM-dd")}
  */
 @Slf4j
-@Controller
-@RequestMapping(value = "/${prefixName}")
+@RestController
+@RequestMapping("/${prefixName}")
 public class ${objectName}Controller<#if entityType != 1> extends BaseController</#if> {
 	
 	@Autowired
@@ -27,20 +26,11 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 
 
 	/**
-	* 进入管理页面
-	*/
-	@RequestMapping(value="/view")
-	public String ${prefixName}(){
-		return "${prefixName}View";
-	}
-
-	/**
 	* 查询详情
 	* @param id
 	* @return
 	*/
-	@RequestMapping(value = "/info/{id}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	@ResponseBody
+	@RequestMapping("/info/{id}")
 	public Object getById(@PathVariable <#if keyFiled.type == 'int'>Integer<#elseif keyFiled.type == 'bigint'>Long<#else>String</#if> id){
 	<#if keyFiled.type == 'int'>
 		if(id == null || id.intValue() <= 0){
@@ -77,8 +67,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 分页数据
 	*/
-	@RequestMapping(value = "/page", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	@ResponseBody
+	@RequestMapping("/page")
 	public Object page(@RequestParam(defaultValue = "1") Integer pn, @RequestParam(defaultValue = "10") Integer size,
 		<#if entityType == 1> ${objectName} ${prefixName}, </#if>HttpServletResponse response){
 	<#if entityType != 1>
@@ -111,8 +100,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 获取数据集合
 	*/
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	@ResponseBody
+	@RequestMapping("/list")
 	public Object list(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
@@ -140,8 +128,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
     /**
     * 添加
     */
-    @RequestMapping(value="/info",method=RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
     public Object add(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
@@ -173,8 +160,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 更新
 	*/
-	@RequestMapping(value="/info",method=RequestMethod.PUT)
-	@ResponseBody
+	@RequestMapping(value = "/info", method = RequestMethod.PUT)
 	public Object update(<#if entityType == 1>${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
@@ -206,8 +192,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 删除
 	*/
-	@RequestMapping(value="/info/{id}",method=RequestMethod.DELETE)
-    @ResponseBody
+	@RequestMapping(value = "/info/{id}", method = RequestMethod.DELETE)
 	public Object delete(@PathVariable <#if keyFiled.type == 'int'>Integer<#elseif keyFiled.type == 'bigint'>Long<#else>String</#if> id){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
@@ -248,8 +233,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	/**
 	* 批量删除
 	*/
-	@RequestMapping(value="/ids",method=RequestMethod.DELETE)
-	@ResponseBody
+	@RequestMapping(value = "/ids", method = RequestMethod.DELETE)
 	public Object delByIds(String str){
 	<#if entityType != 1>
 		PageData pd = new PageData();
