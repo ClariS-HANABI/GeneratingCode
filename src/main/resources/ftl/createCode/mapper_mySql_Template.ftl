@@ -35,6 +35,14 @@
 		</#list>
 		a.${keyFiled.name}
 	</sql>
+
+	<sql id="WhereTerm">
+	<#list fieldList as var>
+		<if test="${var[0]} != null and ${var[0]} != ''" >
+			and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
+		</if>
+	</#list>
+	</sql>
 	
 	<!-- 新增 -->
 	<insert id="add" parameterType="${entityName}">
@@ -121,11 +129,7 @@
 		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
         from ${tableName} a
         <where>
-		<#list fieldList as var>
-            <if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-            </if>
-		</#list>
+			<include refid="WhereTerm"></include>
         </where>
     </select>
 	
@@ -137,9 +141,7 @@
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-			</if>
+			<include refid="WhereTerm"></include>
 		</#list>
 		</where>
 	</select>
@@ -152,9 +154,7 @@
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-			</if>
+			<include refid="WhereTerm"></include>
 		</#list>
 		</where>
 	</select>
