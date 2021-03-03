@@ -81,7 +81,6 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 		Map<String, Object> map = null;
 	</#if>
 		try{
-			response.setContentType("text/html;charset=utf-8");//设置页面的字符编码
 			PageHelper.startPage(pn, size);
 			List<${paramsType}> varList = ${prefixName}Service.listAll(<#if entityType == 1>${prefixName}<#else>pd</#if>);
 			PageInfo page = new PageInfo(varList, 5);
