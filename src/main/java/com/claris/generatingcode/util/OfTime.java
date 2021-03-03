@@ -1,12 +1,11 @@
 package com.claris.generatingcode.util;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * 日期工具类
@@ -146,11 +145,11 @@ public class OfTime {
     }
 
     /**
-     * 时间增加
+     * 加减时间
      *
      * @param time 时间
-     * @param type 年，月，日，周
-     * @param num  要增加的数
+     * @param type 年-year，月-month，日-date，周-week
+     * @param num  加减数值
      * @return
      * @throws ParseException
      */
@@ -558,6 +557,33 @@ public class OfTime {
         return format;
     }
 
+    /**
+     * 获取两个日期之间的所有日期
+     *
+     * @param startTime 开始日期
+     * @param endTime   结束日期
+     * @return
+     */
+    public static List<String> getDayList(String startTime, String endTime) throws Exception {
+        // 返回的日期集合
+        List<String> days = new ArrayList<>();
+        Date start = DATE_ALL.parse(startTime);
+        Date end = DATE_ALL.parse(endTime);
+
+        //日期加减对象
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(start);
+        Calendar tempEnd = Calendar.getInstance();
+        tempEnd.setTime(end);
+        // 日期加1(包含结束)
+        tempEnd.add(Calendar.DATE, +1);
+        //循环获取日期
+        while (tempStart.before(tempEnd)) {
+            days.add(DATE_ALL.format(tempStart.getTime()));
+            tempStart.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return days;
+    }
 
 }  
     
