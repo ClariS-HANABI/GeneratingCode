@@ -129,7 +129,7 @@
 		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
         from ${tableName} a
         <where>
-			<include refid="WhereTerm"></include>
+			<include refid="WhereTerm"/>
         </where>
     </select>
 	
@@ -140,7 +140,7 @@
 		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a
 		<where>
-			<include refid="WhereTerm"></include>
+			<include refid="WhereTerm"/>
 		</where>
 	</select>
 
@@ -151,7 +151,7 @@
 		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
-			<include refid="WhereTerm"></include>
+			<include refid="WhereTerm"/>
 		</where>
 	</select>
 
