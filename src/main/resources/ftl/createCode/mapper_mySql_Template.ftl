@@ -140,9 +140,7 @@
 		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
 		from ${tableName} a
 		<where>
-		<#list fieldList as var>
 			<include refid="WhereTerm"></include>
-		</#list>
 		</where>
 	</select>
 
@@ -153,9 +151,7 @@
 		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
-		<#list fieldList as var>
 			<include refid="WhereTerm"></include>
-		</#list>
 		</where>
 	</select>
 

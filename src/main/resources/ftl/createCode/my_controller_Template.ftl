@@ -3,7 +3,6 @@ package ${packagePath}.controller;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 <#if entityType != 1>import ${packagePath}.controller.BaseController;</#if>
 import com.github.pagehelper.*;
 import javax.servlet.http.*;
