@@ -2,7 +2,6 @@ package ${packagePath}.${entityPath};
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import com.alibaba.fastjson.annotation.JSONField;
 import java.util.*;
 
 @Data
@@ -32,11 +31,11 @@ public class ${objectName} {
     private Double ${var[0]};
 
     <#elseif var[1] == 'date'>
-    @JSONField(format = "yyyy-MM-dd")
+    //@JSONField(format = "yyyy-MM-dd")
     private Date ${var[0]};
 
     <#elseif var[1] == 'timestamp'>
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    //@JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date ${var[0]};
 
     <#else>
