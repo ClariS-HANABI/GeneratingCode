@@ -117,7 +117,7 @@
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="<#if keyFiled.type == 'int'>java.lang.Integer<#elseif keyFiled.type == 'bigint'>java.lang.Long<#else>java.lang.String</#if>" ${result}>
 		select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		where a.${keyFiled.name} = ${r"#{"}${keyFiled.filed}${r"}"}
 	</select>
@@ -126,7 +126,7 @@
     <!-- 根据条件获取单个数据 -->
     <select id="findByInfo" parameterType="${entityName}" ${result}>
         select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
         from ${tableName} a
         <where>
 			<include refid="WhereTerm"/>
@@ -137,7 +137,7 @@
 	<!-- 列表 -->
 	<select id="listAll" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
 			<include refid="WhereTerm"/>

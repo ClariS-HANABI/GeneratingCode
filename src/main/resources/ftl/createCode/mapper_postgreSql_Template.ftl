@@ -16,6 +16,14 @@
 		a.${keyFiled.name}
 	</sql>
 
+	<sql id="WhereTerm">
+		<#list fieldList as var>
+			<if test="${var[0]} != null and ${var[0]} != ''" >
+				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
+			</if>
+		</#list>
+	</sql>
+
 	<!-- 新增 -->
 	<insert id="add" parameterType="${entityName}">
 		insert into ${tableName}(
@@ -89,7 +97,7 @@
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="<#if keyFiled.type == 'int'>java.lang.Integer<#elseif keyFiled.type == 'bigint'>java.lang.Long<#else>java.lang.String</#if>" ${result}>
 		select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		where a.${keyFiled.name} = ${r"#{"}${keyFiled.filed}${r"}"}
 	</select>
@@ -98,13 +106,11 @@
 	<!-- 根据条件获取单个数据 -->
 	<select id="findByInfo" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-			</if>
+			<include refid="WhereTerm"/>
 		</#list>
 		</where>
 	</select>
@@ -113,13 +119,11 @@
 	<!-- 列表 -->
 	<select id="listAll" parameterType="${entityName}" ${result}>
 		select
-		<include refid=<#if entityType == 1>'BaseColumnList'<#else>'ColumnList'</#if> />
+		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
 		<#list fieldList as var>
-			<if test="${var[0]} != null and ${var[0]} != ''" >
-				and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-			</if>
+			<include refid="WhereTerm"/>
 		</#list>
 		</where>
 	</select>
@@ -131,11 +135,7 @@
 		<include refid="ColumnList" />
 		from ${tableName} a
 		<where>
-			<#list fieldList as var>
-				<if test="${var[0]} != null and ${var[0]} != ''" >
-					and a.${var[5]} = ${r"#{"}${var[0]}${r"}"}
-				</if>
-			</#list>
+			<include refid="WhereTerm"/>
 		</where>
 	</select>
 
