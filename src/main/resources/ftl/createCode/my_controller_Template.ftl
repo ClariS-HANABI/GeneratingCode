@@ -73,8 +73,7 @@ public class ${objectName}Controller<#if entityType != 1> extends BaseController
 	* 分页数据
 	*/
 	@RequestMapping("/page")
-	public Object page(@RequestParam(defaultValue = "1") Integer pn, @RequestParam(defaultValue = "10") Integer size,
-		<#if entityType == 1> ${objectName} ${prefixName}, </#if>HttpServletResponse response){
+	public Object page(@RequestParam(defaultValue = "1") Integer pn, @RequestParam(defaultValue = "10") Integer size, <#if entityType == 1> ${objectName} ${prefixName}</#if>){
 	<#if entityType != 1>
 		PageData pd = this.getPageData();
 	<#else>
